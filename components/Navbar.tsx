@@ -13,7 +13,7 @@ export default function NavbarComponent() {
     <Navbar isBordered>
       <NavbarBrand>
         <p className="font-bold text-inherit mx-1">PACMON</p>
-        <div className="text-2xl text-yellow-500">
+        <div className="text-2xl text-yellow-400">
           <ImPacman />
         </div>
       </NavbarBrand>
