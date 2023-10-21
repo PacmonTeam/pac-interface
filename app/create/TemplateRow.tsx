@@ -1,7 +1,7 @@
 import CodeMirror from "@uiw/react-codemirror";
 import { langs } from "@uiw/codemirror-extensions-langs";
-import { createTheme } from "@uiw/codemirror-themes";
 import { ContractType } from "@/utils";
+import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 
 export interface TemplateRowProps {
   key: string;
@@ -13,11 +13,6 @@ export interface TemplateRowProps {
 }
 
 export default function TemplateRow(props: TemplateRowProps) {
-  const myTheme = createTheme({
-    theme: "dark",
-    settings: {},
-    styles: [],
-  });
   return (
     <div className="flex flex-row gap-12">
       <div className="w-1/2">
@@ -25,7 +20,7 @@ export default function TemplateRow(props: TemplateRowProps) {
           value={props.solidityCode}
           height="200px"
           extensions={[langs.solidity()]}
-          theme={myTheme}
+          theme={vscodeDark}
           // Editable only in custom
           editable={props.contractType === ContractType.CUSTOM}
           onChange={(value) => {
@@ -38,7 +33,7 @@ export default function TemplateRow(props: TemplateRowProps) {
           value={props.yamlCode}
           height="200px"
           extensions={[langs.yaml()]}
-          theme={myTheme}
+          theme={vscodeDark}
           onChange={(value) => {
             if (props.setYamlCode) props.setYamlCode(value, props.key);
           }}

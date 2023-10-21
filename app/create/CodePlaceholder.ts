@@ -1,5 +1,4 @@
-export const solidityPlaceholder = `
-// SPDX-License-Identifier: MIT
+export const solidityPlaceholder = `// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
 contract SimpleStorage {
@@ -12,8 +11,7 @@ contract SimpleStorage {
     }
 }
 `;
-export const yamlPlaceholder = `
-doe: "a deer, a female deer"
+export const yamlPlaceholder = `doe: "a deer, a female deer"
 ray: "a drop of golden sun"
 pi: 3.14159
 xmas: true
