@@ -20,8 +20,14 @@ export default function TemplateRow(props: TemplateRowProps) {
       <div className="mb-4">{props.text}</div>
       <div className="flex flex-row gap-12">
         <div className="w-2/3">
-          <div className="flex flex-row">
-            <SiSolidity /> <MdOutlineEditOff />
+          <div className="flex flex-row gap-2 mb-2">
+            <span className="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium text-indigo-700 border-indigo-700 ring-1 ring-inset ring-indigo-700/10">
+              <SiSolidity />
+            </span>
+            <span className="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium text-gray-600 border-gray-600 ring-1 ring-inset ring-gray-500/10">
+              <MdOutlineEditOff />
+              &nbsp;&nbsp;Not editable
+            </span>
           </div>
           <CodeMirror
             value={props.solidityScript}
@@ -37,8 +43,14 @@ export default function TemplateRow(props: TemplateRowProps) {
           />
         </div>
         <div className="w-1/3">
-          <div className="flex flex-row">
-            <SiYaml /> <MdOutlineModeEditOutline />
+          <div className="flex flex-row gap-2 mb-2">
+            <span className="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium text-yellow-800 border-yellow-600 ring-1 ring-inset ring-yellow-600/10">
+              <SiYaml />
+            </span>
+            <span className="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium text-green-700 border-green-600 ring-1 ring-inset ring-green-600/20">
+              <MdOutlineModeEditOutline />
+              &nbsp;&nbsp;Editable
+            </span>
           </div>
           <CodeMirror
             value={props.yamlConfiguration}
