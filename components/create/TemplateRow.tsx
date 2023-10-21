@@ -14,8 +14,8 @@ export interface TemplateRowProps {
 
 export default function TemplateRow(props: TemplateRowProps) {
   return (
-    <div className="flex flex-row gap-12">
-      <div className="w-1/2">
+    <div className="flex flex-row gap-12 rounded-lg bg-content1">
+      <div className="">
         <CodeMirror
           value={props.solidityCode}
           height="200px"
@@ -28,7 +28,7 @@ export default function TemplateRow(props: TemplateRowProps) {
           }}
         />
       </div>
-      <div className="w-1/2">
+      <div className="">
         <CodeMirror
           value={props.yamlCode}
           height="200px"
