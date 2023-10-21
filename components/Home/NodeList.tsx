@@ -1,3 +1,4 @@
+import { formatDate } from "@/lib/formatDate";
 import { Button, User, Snippet } from "@nextui-org/react";
 import { Key, useCallback, useState } from "react";
 import { AiFillDelete, AiOutlineSetting } from "react-icons/ai";
@@ -82,7 +83,7 @@ export default function NodeList(props: NodesProps) {
               <div className="min-w-0 flex-auto">
                 <p className="text-sm font-semibold leading-6">{node.name}</p>
                 <p className="truncate text-xs leading-5 text-gray-500">
-                  {node.createdAt}
+                  {formatDate(node.createdAt)}
                 </p>
               </div>
             </div>

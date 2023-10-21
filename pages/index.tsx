@@ -12,13 +12,13 @@ export default function Home() {
       <div className="container max-w-[1024px] gap-4 relative">
         <div className="flex my-2 flex-col">
           <div className="mx-auto max-w-7xl py-6 flex flex-row items-center gap-2">
-            <h1 className="text-xl uppercase">Project</h1>
+            <h1 className="text-xl font-extrabold uppercase">Project</h1>
           </div>
           <ProjectList />
         </div>
         <div className="flex my-2 flex-col">
           <div className="mx-auto max-w-7xl py-6 flex flex-row items-center gap-2">
-            <h1 className="text-xl uppercase">Node</h1>
+            <h1 className="text-xl font-extrabold uppercase">Node</h1>
           </div>
           <NodeList />
         </div>

@@ -1,3 +1,4 @@
+import { formatDate } from "@/lib/formatDate";
 import { Card, CardBody, Select, SelectItem, Button } from "@nextui-org/react";
 import { useState } from "react";
 import { AiFillDelete, AiFillEdit } from "react-icons/ai";
@@ -74,7 +75,7 @@ function ProjectCard(props: ProjectsProps) {
               <div className="flex flex-col">
                 <h3 className="font-semibold text-foreground/90">Pacman</h3>
                 <small className="text-default-500">
-                  Created At: 2021-01-01T00:00:00.000Z
+                  Created At - {formatDate("2021-01-01T00:00:00.000Z")}
                 </small>
               </div>
             </div>
