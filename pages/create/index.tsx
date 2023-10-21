@@ -9,6 +9,8 @@ import {
   solidityPlaceholder,
   yamlPlaceholder,
 } from "@/components/create/CodePlaceholder";
+import { Button } from "@nextui-org/react";
+import { BsCloudUploadFill } from "react-icons/bs";
 
 export default function Page({ children }: { children: React.ReactNode }) {
   const [templateRows, setTemplateRows] = useState<TemplateRowProps[]>([]);
@@ -68,7 +70,36 @@ export default function Page({ children }: { children: React.ReactNode }) {
           />
         );
       })}
-      <AddContractButton onClick={onClickAddContract}></AddContractButton>
+      <div className="flex flex-row gap-2">
+        <AddContractButton onClick={onClickAddContract}></AddContractButton>
+        {templateRows.length > 0 ? (
+          <Button
+            color="primary"
+            onClick={() => {
+              // prepare request body
+            }}
+          >
+            <BsCloudUploadFill />
+            Create project
+          </Button>
+        ) : null}
+      </div>
     </div>
   );
+}
+
+enum Status {
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
+}
+
+interface TemplateRequest {
+  script: string;
+  configuration: string;
+  sequence: number;
+  status: Status;
+}
+interface CreateProjectRequest {
+  name: string;
+  templates: TemplateRequest[];
 }
