@@ -9,6 +9,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      colors: {
+        "vs-code-bg": "#1e1e1e"
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":

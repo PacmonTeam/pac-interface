@@ -4,3 +4,8 @@ export enum ContractType {
   PRICE_FEED,
   CUSTOM
 }
+
+export enum ScriptType {
+  SOLIDITY,
+  YAML
+}
