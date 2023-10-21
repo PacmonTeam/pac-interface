@@ -31,7 +31,7 @@ export default function Page({ children }: { children: React.ReactNode }) {
   //   },
   // };
   return (
-    <div className="container flex flex-col gap-12">
+    <div className="container flex flex-col gap-12 items-center">
       {contractRowPropsList.map((props) => {
         return (
           <TemplateRow
