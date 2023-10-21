@@ -1,4 +1,5 @@
 import {
+  Button,
   Navbar,
   NavbarBrand,
   NavbarContent,
@@ -26,6 +27,9 @@ export default function NavbarComponent() {
           >
             <AiFillGithub />
           </Link>
+        </NavbarItem>
+        <NavbarItem>
+          <Button color="primary">Create New Project</Button>
         </NavbarItem>
       </NavbarContent>
     </Navbar>

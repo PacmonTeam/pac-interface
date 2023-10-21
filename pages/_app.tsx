@@ -10,7 +10,6 @@ import Layout from "@/components/Layout";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({ Component, pageProps }: AppProps) {
-  console.log("_app =:", Component, pageProps);
   return (
     <main className={`${inter.className}`}>
       <Head>
