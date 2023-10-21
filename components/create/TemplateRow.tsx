@@ -1,9 +1,10 @@
 import CodeMirror from "@uiw/react-codemirror";
 import { langs } from "@uiw/codemirror-extensions-langs";
 import { ContractType, ScriptType } from "@/utils";
-import { vscodeDark } from "@uiw/codemirror-theme-vscode";
+import { vscodeDark, vscodeDarkInit } from "@uiw/codemirror-theme-vscode";
 import { MdOutlineEditOff, MdOutlineModeEditOutline } from "react-icons/md";
 import { SiSolidity, SiYaml } from "react-icons/si";
+import { createTheme } from "@uiw/codemirror-themes";
 
 export interface TemplateRowProps {
   id: string;
@@ -15,6 +16,16 @@ export interface TemplateRowProps {
 }
 
 export default function TemplateRow(props: TemplateRowProps) {
+  const isSolidityScriptEditable = props.contractType === ContractType.CUSTOM;
+  const editableTheme = vscodeDark;
+  const notEditableTheme = vscodeDarkInit({
+    settings: {
+      lineHighlight: undefined,
+    },
+  });
+  const solidityScriptTheme = isSolidityScriptEditable
+    ? vscodeDark
+    : notEditableTheme;
   return (
     <div className="flex flex-col mb-4 p-unit-lg box-border rounded-lg bg-content1 w-full">
       <div className="mb-4">{props.text}</div>
@@ -33,9 +44,8 @@ export default function TemplateRow(props: TemplateRowProps) {
             value={props.solidityScript}
             height="200px"
             extensions={[langs.solidity()]}
-            theme={vscodeDark}
-            // Editable only in custom
-            editable={props.contractType === ContractType.CUSTOM}
+            theme={solidityScriptTheme}
+            editable={isSolidityScriptEditable}
             onChange={(value) => {
               if (props.setScript)
                 props.setScript(value, ScriptType.SOLIDITY, props.id);
@@ -56,7 +66,7 @@ export default function TemplateRow(props: TemplateRowProps) {
             value={props.yamlConfiguration}
             height="200px"
             extensions={[langs.yaml()]}
-            theme={vscodeDark}
+            theme={editableTheme}
             onChange={(value) => {
               if (props.setScript)
                 props.setScript(value, ScriptType.YAML, props.id);
