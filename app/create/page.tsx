@@ -1,68 +1,59 @@
 "use client";
 
-import CodeMirror from "@uiw/react-codemirror";
-import { langs } from "@uiw/codemirror-extensions-langs";
-import { createTheme } from "@uiw/codemirror-themes";
-import { tags as t } from "@lezer/highlight";
+// import { tags as t } from "@lezer/highlight";
+import { Button } from "@nextui-org/react";
+import { useState } from "react";
+import ContractRow, { ContractRowProps } from "./ContractRow";
+import { solidityPlaceholder, yamlPlaceholder } from "./CodePlaceholder";
+import _ from "lodash";
+import AddContractButton from "./AddContractButton";
+import { ContractType } from "@/utils";
 
 export default function Page({ children }: { children: React.ReactNode }) {
-  const myTheme = createTheme({
-    theme: "dark",
-    settings: {},
-    styles: [],
-  });
-  const initSolidityCode = `
-    // SPDX-License-Identifier: MIT
-    pragma solidity ^0.8.4;
+  const [contractRowPropsList, setContractRowPropsList] = useState<
+    ContractRowProps[]
+  >([]);
+  // const setSolidityCode = (code: string, key: string) => {
+  //   const targetProps = contractRowPropsList.find((props) => {
+  //     return props.key === key;
+  //   });
+  //   const result = _.find(_.cloneDeep(contractRowPropsList), ["key", key])
+  //   setContractRowPropsList(
 
-    contract SimpleStorage {
-        uint256 storedData;
-        function set(uint x) public {
-            storedData = x;
-        }
-        function get() public view returns (uint) {
-            return storedData;
-        }
-    }
-  `;
-  const initYamlCode = `
-    doe: "a deer, a female deer"
-    ray: "a drop of golden sun"
-    pi: 3.14159
-    xmas: true
-    french-hens: 3
-    calling-birds:
-      - huey
-      - dewey
-      - louie
-      - fred
-    xmas-fifth-day:
-      calling-birds: four
-      french-hens: 3
-      golden-rings: 5
-      partridges:
-        count: 1
-        location: "a pear tree"
-      turtle-doves: two
-  `;
+  //   );
+  // };
+  // const defaultContractRowProps: ContractRowProps = {
+  //   solidityCode: solidityPlaceholder,
+  //   yamlCode: yamlPlaceholder,
+  //   setSolidityCode: (code: string, key: string) => {
+  //     setContractRowPropsList();
+  //   },
+  // };
   return (
-    <div className="container flex gap-12">
-      <div className="w-1/2">
-        <CodeMirror
-          value={initSolidityCode}
-          height="200px"
-          extensions={[langs.solidity()]}
-          theme={myTheme}
-        />
-      </div>
-      <div className="w-1/2">
-        <CodeMirror
-          value={initYamlCode}
-          height="200px"
-          extensions={[langs.yaml()]}
-          theme={myTheme}
-        />
-      </div>
+    <div className="container flex flex-col gap-12">
+      {contractRowPropsList.map((props) => {
+        return (
+          <ContractRow
+            key={props.key}
+            contractType={props.contractType}
+            solidityCode={props.solidityCode}
+            yamlCode={props.yamlCode}
+          />
+        );
+      })}
+      <AddContractButton
+        onClick={(c: ContractType) => {
+          setContractRowPropsList([
+            ...contractRowPropsList,
+            {
+              key: "",
+              contractType: c,
+              solidityCode: solidityPlaceholder,
+              yamlCode: yamlPlaceholder,
+            },
+          ]);
+        }}
+      ></AddContractButton>
     </div>
   );
 }
