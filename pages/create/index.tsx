@@ -1,13 +1,14 @@
 "use client";
 
-// import { tags as t } from "@lezer/highlight";
-import { Button } from "@nextui-org/react";
 import { useState } from "react";
-import TemplateRow, { TemplateRowProps } from "./TemplateRow";
-import { solidityPlaceholder, yamlPlaceholder } from "./CodePlaceholder";
 import _ from "lodash";
-import AddContractButton from "./AddContractButton";
+import AddContractButton from "../../components/create/AddContractButton";
 import { ContractType } from "@/utils";
+import TemplateRow, { TemplateRowProps } from "@/components/create/TemplateRow";
+import {
+  solidityPlaceholder,
+  yamlPlaceholder,
+} from "@/components/create/CodePlaceholder";
 
 export default function Page({ children }: { children: React.ReactNode }) {
   const [contractRowPropsList, setContractRowPropsList] = useState<
