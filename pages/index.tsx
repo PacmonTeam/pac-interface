@@ -1,7 +1,6 @@
 import ProjectList from "@/components/Home/ProjectList";
 import NodeList from "@/components/Home/NodeList";
 import { useProjects } from "@/lib/useProject";
-import { Skeleton, Button } from "@nextui-org/react";
 
 export default function Home() {
   const { data: projects, isLoading: isProjectsLoading } = useProjects();

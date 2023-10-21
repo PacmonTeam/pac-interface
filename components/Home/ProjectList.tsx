@@ -1,65 +1,66 @@
-import { formatDate } from "@/lib/formatDate";
-import { Card, CardBody, Select, SelectItem, Button } from "@nextui-org/react";
+import {
+  Card,
+  CardBody,
+  Select,
+  SelectItem,
+  Button,
+  Spinner,
+} from "@nextui-org/react";
 import { useState } from "react";
 import { AiFillDelete, AiFillEdit } from "react-icons/ai";
+import { TbFaceIdError } from "react-icons/tb";
 import { GoRocket } from "react-icons/go";
+
+import { formatDate } from "@/lib/formatDate";
+import { useProjects } from "@/lib/useProject";
+import { AVAILABLE_NODES } from "@/lib/constants";
 
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 
-type ProjectsProps = {};
+type TemplateModel = {
+  script: string;
+  configuration: string;
+};
+type ProjectCardProps = {
+  isLoading: boolean;
+  project: {
+    name: string;
+    template: TemplateModel[];
+    createdAt: string;
+  };
+};
 
-const mockProjectList = [
-  {
-    name: "Pacmon",
-    templates: [
-      {
-        script: "// SOLIDITY CODE",
-        configuration: "// YAML CONFIG",
-        sequence: 0,
-        status: "ACTIVE",
-        createdAt: "2021-01-01T00:00:00.000Z",
-        updatedAt: "2021-01-01T00:00:00.000Z",
-      },
-    ],
-  },
-];
+export default function ProjectList() {
+  const { data: projects, isLoading } = useProjects();
 
-const AVAILABLE_NODES = [
-  {
-    id: "1",
-    CPU: "1 CPU",
-    RAM: "1 GB",
-    Storage: "25 GB",
-    isSSD: true,
-  },
-  {
-    id: "2",
-    CPU: "1 CPU",
-    RAM: "2 GB",
-    Storage: "50 GB",
-    isSSD: true,
-  },
-  {
-    id: "3",
-    CPU: "2 CPU",
-    RAM: "4 GB",
-    Storage: "100 GB",
-    isSSD: true,
-    isDisabled: true,
-  },
-];
+  const renderCardList = () => {
+    if (isLoading) {
+      return <Spinner color="default" />;
+    }
 
-export default function ProjectList(props: ProjectsProps) {
-  return (
-    <div className="grid gap-2">
-      {mockProjectList.map((project, index) => (
-        <ProjectCard key={index} {...project} />
-      ))}
-    </div>
-  );
+    if (projects.length === 0) {
+      return (
+        <div className="rounded-lg border border-dashed border-neutral-50/50 bg-transparent p-4">
+          <div className="w-full text-default-500/80">
+            <div className="flex justify-center items-center">
+              <TbFaceIdError size="50" />
+            </div>
+            <div className="flex justify-center items-center text-xs font-bold">
+              Project is Empty!
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    return projects.map((project: any, index: number) => (
+      <ProjectCard key={index} isLoading={false} project={project} />
+    ));
+  };
+  return <div className="grid gap-2">{renderCardList()}</div>;
 }
 
-function ProjectCard(props: ProjectsProps) {
+function ProjectCard({ project }: ProjectCardProps) {
   const [selectedNode, setSelectedNode] = useState<any>();
   const disabledNode = AVAILABLE_NODES.filter((e) => e.isDisabled).map(
     (e) => e.id
@@ -71,11 +72,13 @@ function ProjectCard(props: ProjectsProps) {
         <div className="grid grid-cols-12">
           <div className="flex flex-col col-span-8 gap-4">
             <div className="flex flex-row gap-4">
-              <Jazzicon diameter={40} seed={jsNumberForAddress("Pacman")} />
+              <Jazzicon diameter={40} seed={jsNumberForAddress(project.name)} />
               <div className="flex flex-col">
-                <h3 className="font-semibold text-foreground/90">Pacman</h3>
+                <h3 className="font-semibold text-foreground/90">
+                  {project.name}
+                </h3>
                 <small className="text-default-500">
-                  Created At - {formatDate("2021-01-01T00:00:00.000Z")}
+                  Created At - {formatDate(project.createdAt)}
                 </small>
               </div>
             </div>
