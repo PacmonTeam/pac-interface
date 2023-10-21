@@ -29,7 +29,9 @@ export default function NavbarComponent() {
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Button color="primary">Create New Project</Button>
+          <Button as={Link} color="primary" href="/create">
+            Create New Project
+          </Button>
         </NavbarItem>
       </NavbarContent>
     </Navbar>
