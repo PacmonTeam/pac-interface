@@ -14,11 +14,8 @@ export default function NavbarComponent() {
         <p className="font-bold text-inherit">PACMON</p>
       </NavbarBrand>
       <NavbarContent justify="end">
-        <NavbarItem>
-          <Button as={Link} color="primary" href="/create" variant="flat">
-            Create
-          </Button>
-        </NavbarItem>
+        {/* <NavbarItem>
+        </NavbarItem> */}
       </NavbarContent>
     </Navbar>
   );

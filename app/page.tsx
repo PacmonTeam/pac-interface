@@ -2,6 +2,7 @@
 
 import "react-placeholder/lib/reactPlaceholder.css";
 import ReactPlaceholder from "react-placeholder";
+import { Button, Link } from "@nextui-org/react";
 
 export default function Home() {
   return (
@@ -14,7 +15,12 @@ export default function Home() {
       </div>
       <div>
         {/* Form */}
-        <div>Template</div>
+        <div>
+          Template
+          <Button as={Link} color="primary" href="/create" variant="flat">
+            Create
+          </Button>
+        </div>
         <div>Node</div>
       </div>
     </div>
