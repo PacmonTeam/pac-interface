@@ -10,7 +10,7 @@ export default function Home() {
     <div className="flex w-full justify-center">
       <div className="container max-w-[1024px] gap-4 relative">
         <div className="flex my-2 flex-col">
-          <div className="mx-auto max-w-7xl py-6 flex flex-row items-center gap-2">
+          <div className="mx-auto max-w-7xl pb-6 flex flex-row items-center gap-2">
             <h1 className="text-xl font-extrabold uppercase">Project</h1>
           </div>
           <ProjectList />
