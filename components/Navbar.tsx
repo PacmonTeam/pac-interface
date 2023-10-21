@@ -13,10 +13,12 @@ export default function NavbarComponent() {
   return (
     <Navbar isBordered>
       <NavbarBrand>
-        <p className="font-bold text-inherit mx-1">PACMON</p>
-        <div className="text-2xl text-yellow-400">
-          <ImPacman />
-        </div>
+        <Link className="flex" href="/">
+          <p className="font-bold text-inherit mx-1">PACMON</p>
+          <div className="text-2xl text-yellow-400">
+            <ImPacman />
+          </div>
+        </Link>
       </NavbarBrand>
       <NavbarContent as="div" className="items-center" justify="end">
         <NavbarItem>
