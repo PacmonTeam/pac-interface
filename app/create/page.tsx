@@ -3,7 +3,7 @@
 // import { tags as t } from "@lezer/highlight";
 import { Button } from "@nextui-org/react";
 import { useState } from "react";
-import ContractRow, { ContractRowProps } from "./ContractRow";
+import TemplateRow, { TemplateRowProps } from "./TemplateRow";
 import { solidityPlaceholder, yamlPlaceholder } from "./CodePlaceholder";
 import _ from "lodash";
 import AddContractButton from "./AddContractButton";
@@ -11,7 +11,7 @@ import { ContractType } from "@/utils";
 
 export default function Page({ children }: { children: React.ReactNode }) {
   const [contractRowPropsList, setContractRowPropsList] = useState<
-    ContractRowProps[]
+    TemplateRowProps[]
   >([]);
   // const setSolidityCode = (code: string, key: string) => {
   //   const targetProps = contractRowPropsList.find((props) => {
@@ -33,7 +33,7 @@ export default function Page({ children }: { children: React.ReactNode }) {
     <div className="container flex flex-col gap-12">
       {contractRowPropsList.map((props) => {
         return (
-          <ContractRow
+          <TemplateRow
             key={props.key}
             contractType={props.contractType}
             solidityCode={props.solidityCode}

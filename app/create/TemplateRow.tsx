@@ -3,7 +3,7 @@ import { langs } from "@uiw/codemirror-extensions-langs";
 import { createTheme } from "@uiw/codemirror-themes";
 import { ContractType } from "@/utils";
 
-export interface ContractRowProps {
+export interface TemplateRowProps {
   key: string;
   contractType: ContractType;
   solidityCode: string;
@@ -12,20 +12,22 @@ export interface ContractRowProps {
   setYamlCode?: (code: string, key: string) => void;
 }
 
-export default function ContractRow(props: ContractRowProps) {
+export default function TemplateRow(props: TemplateRowProps) {
   const myTheme = createTheme({
     theme: "dark",
     settings: {},
     styles: [],
   });
   return (
-    <div className="flex flex-row">
+    <div className="flex flex-row gap-12">
       <div className="w-1/2">
         <CodeMirror
           value={props.solidityCode}
           height="200px"
           extensions={[langs.solidity()]}
           theme={myTheme}
+          // Editable only in custom
+          editable={props.contractType === ContractType.CUSTOM}
           onChange={(value) => {
             if (props.setSolidityCode) props.setSolidityCode(value, props.key);
           }}
