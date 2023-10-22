@@ -9,7 +9,7 @@ import {
   solidityPlaceholder,
   yamlPlaceholder,
 } from "@/components/create/CodePlaceholder";
-import { Button } from "@nextui-org/react";
+import { Button, Textarea } from "@nextui-org/react";
 import { BsCloudUploadFill } from "react-icons/bs";
 import {
   CreateProjectRequest,
@@ -25,6 +25,8 @@ interface CreateProjectSectionProps {
 
 export default function CreateProjectSection(props: CreateProjectSectionProps) {
   const [templateRows, setTemplateRows] = useState<TemplateRowProps[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [projectName, setProjectName] = useState("");
 
   const toText = (c: ContractType) => {
     switch (c) {
@@ -82,33 +84,60 @@ export default function CreateProjectSection(props: CreateProjectSectionProps) {
           />
         );
       })}
-      <div className="flex flex-row gap-2">
-        <AddContractButton onClick={onClickAddContract}></AddContractButton>
-        {templateRows.length > 0 ? (
-          <Button
-            color="primary"
-            onClick={() => {
-              // prepare request body
-              const request: CreateProjectRequest = {
-                name: "test",
-                templates: templateRows.map((template, i) => {
-                  return {
-                    script: template.solidityScript,
-                    configuration: template.yamlConfiguration,
-                    sequence: i,
-                    status: Status.ACTIVE,
-                  };
-                }),
-              };
-              props.createProject(request).then((response) => {
-                console.log("done with", response);
-              });
-            }}
-          >
-            <BsCloudUploadFill />
-            Create project
-          </Button>
-        ) : null}
+      <div className="flex flex-col">
+        <div className="flex mb-2">
+          {templateRows.length > 0 ? (
+            <Textarea
+              minRows={1}
+              isRequired
+              label="Project name"
+              labelPlacement="outside"
+              placeholder="Enter your project name"
+              className="max-w-xs"
+              onValueChange={(value) => {
+                setProjectName(value);
+              }}
+            />
+          ) : null}
+        </div>
+        <div className="flex flex-row gap-2">
+          <AddContractButton onClick={onClickAddContract}></AddContractButton>
+          {templateRows.length > 0 ? (
+            <Button
+              isLoading={isLoading}
+              color="primary"
+              onClick={() => {
+                if (projectName === "") return;
+                setIsLoading(true);
+                // prepare request body
+                const request: CreateProjectRequest = {
+                  name: projectName,
+                  templates: templateRows.map((template, i) => {
+                    return {
+                      script: template.solidityScript,
+                      configuration: template.yamlConfiguration,
+                      sequence: i,
+                      status: Status.ACTIVE,
+                    };
+                  }),
+                };
+                props
+                  .createProject(request)
+                  .then((response) => {
+                    console.log("done with", response);
+                    setIsLoading(false);
+                  })
+                  .catch((reason) => {
+                    console.error(reason);
+                    // TODO: show error breadcrumb
+                  });
+              }}
+            >
+              <BsCloudUploadFill />
+              Create project
+            </Button>
+          ) : null}
+        </div>
       </div>
     </div>
   );
