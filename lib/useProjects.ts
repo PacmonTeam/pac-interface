@@ -1,14 +1,13 @@
-import useSwr from "swr";
+import useSwr, { useSWRConfig } from "swr";
 import { BASE_API } from "@/config/url";
 import { toast } from "react-toastify";
 import { Project } from "./types";
 import { useState } from "react";
 
+const fetcher = (url: string) => fetch(url).then((r) => r.json());
+
 export const useProjects = () => {
-  const { data, error, isLoading } = useSwr(
-    `${BASE_API}/projects`,
-    (url: string) => fetch(url).then((r) => r.json())
-  );
+  const { data, error, isLoading } = useSwr(`${BASE_API}/projects`, fetcher);
 
   if (error) {
     console.error(error);
@@ -17,7 +16,12 @@ export const useProjects = () => {
 };
 
 export const useDeleteProject = () => {
+  const [loading, setLoading] = useState(false);
+  const { mutate } = useSWRConfig();
+
   const deleteProject = async (project: Project) => {
+    setLoading(true);
+    const tId = toast.loading(`Deleting project "${project.name}"`);
     try {
       const response = await fetch(`${BASE_API}/projects/delete`, {
         method: "POST",
@@ -27,22 +31,38 @@ export const useDeleteProject = () => {
       const { success } = await response.json();
 
       if (success) {
-        toast.success(`Project "${project.name}" was deleted!`, {
+        toast.update(tId, {
+          render: `Project "${project.name}" was deleted!`,
+          type: "success",
           icon: "🌈",
+          autoClose: 15000,
+          closeOnClick: true,
+          isLoading: false,
         });
+        mutate(`${BASE_API}/projects`);
       } else {
         throw new Error("Success is not True!");
       }
     } catch (error) {
-      toast.error("Delete Project Fail");
+      toast.update(tId, {
+        render: "Delete Project Fail",
+        type: "error",
+        autoClose: 15000,
+        closeOnClick: true,
+        isLoading: false,
+      });
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
-  return [deleteProject];
+  return { deleteProject, loading };
 };
 
 export const useDeployProject = () => {
   const [loading, setLoading] = useState(false);
+  const { mutate } = useSWRConfig();
+
   const deployProject = async (project: Project, nodeName: string) => {
     setLoading(true);
     const tId = toast.loading(`Deploying node "${nodeName}"`);
@@ -63,6 +83,7 @@ export const useDeployProject = () => {
           closeOnClick: true,
           isLoading: false,
         });
+        mutate(`${BASE_API}/nodes`);
       } else {
         throw new Error("Node not found!");
       }

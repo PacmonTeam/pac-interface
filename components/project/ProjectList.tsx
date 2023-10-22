@@ -57,7 +57,7 @@ export default function ProjectList() {
 
 function ProjectCard({ project }: ProjectCardProps) {
   const [selectedNode, setSelectedNode] = useState<any>();
-  const [deleteProject] = useDeleteProject();
+  const { deleteProject, loading: deleting } = useDeleteProject();
   const disabledNode = AVAILABLE_NODES.filter((e) => e.isDisabled).map(
     (e) => e.id
   );
@@ -93,6 +93,7 @@ function ProjectCard({ project }: ProjectCardProps) {
                 color="danger"
                 startContent={<AiFillDelete />}
                 onPress={() => deleteProject(project)}
+                isLoading={deleting}
               >
                 Delete
               </Button>
