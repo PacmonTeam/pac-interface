@@ -39,3 +39,31 @@ export const useDeleteProject = () => {
   };
   return [deleteProject];
 };
+
+export const useDeployProject = () => {
+  const deployProject = async (project: Project, nodeName: string) => {
+    toast.loading(`Deploying node : ${nodeName}`, {
+      icon: "🚀🚀🚀",
+    });
+    try {
+      const response = await fetch(`${BASE_API}/projects/deploy`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ projectId: project.id, nodeName }),
+      });
+      const { success } = await response.json();
+
+      if (success) {
+        toast.success(`Project "${project.name}" was deployed!`, {
+          icon: "🌈",
+        });
+      } else {
+        throw new Error("Success is not True!");
+      }
+    } catch (error) {
+      toast.error("Deploy Project Fail!", { icon: "❗️" });
+      console.error(error);
+    }
+  };
+  return [deployProject];
+};
