@@ -38,7 +38,7 @@ export default function TemplateRow(props: TemplateRowProps) {
         &nbsp;
         <span className="text-slate-100">{props.text}</span>
       </div>
-      <div className="flex flex-row gap-12">
+      <div className="flex flex-row text-xs">
         <div className="w-2/3">
           <div className="flex flex-row gap-2 mb-2">
             <span className="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium text-indigo-700 border-indigo-700 ring-1 ring-inset ring-indigo-700/10">
@@ -61,7 +61,7 @@ export default function TemplateRow(props: TemplateRowProps) {
             }}
           />
         </div>
-        <div className="w-1/3">
+        <div className="w-1/3 pl-4">
           <div className="flex flex-row gap-2 mb-2">
             <span className="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium text-yellow-800 border-yellow-600 ring-1 ring-inset ring-yellow-600/10">
               <SiYaml />
