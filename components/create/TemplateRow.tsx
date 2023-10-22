@@ -17,6 +17,7 @@ export interface TemplateRowProps {
 export default function TemplateRow(props: TemplateRowProps) {
   const isSolidityScriptEditable = props.contractType === ContractType.CUSTOM;
   const editableTheme = vscodeDark;
+  // TODO: Make the line highlight disappear, currently still showing color with undefined assigned
   const notEditableTheme = vscodeDarkInit({
     settings: {
       lineHighlight: undefined,

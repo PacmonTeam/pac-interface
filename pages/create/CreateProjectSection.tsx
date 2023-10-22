@@ -16,6 +16,7 @@ import {
   CreateProjectResponse,
   Status,
 } from "@/lib/types";
+import { useRouter } from "next/router";
 
 interface CreateProjectSectionProps {
   createProject: (
@@ -24,6 +25,7 @@ interface CreateProjectSectionProps {
 }
 
 export default function CreateProjectSection(props: CreateProjectSectionProps) {
+  const router = useRouter();
   const [templateRows, setTemplateRows] = useState<TemplateRowProps[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [projectName, setProjectName] = useState("");
@@ -84,6 +86,7 @@ export default function CreateProjectSection(props: CreateProjectSectionProps) {
           />
         );
       })}
+      {/* TODO: Improve UI of this section, could fix these comps to buttom and reorder them */}
       <div className="flex flex-col">
         <div className="flex mb-2">
           {templateRows.length > 0 ? (
@@ -126,6 +129,7 @@ export default function CreateProjectSection(props: CreateProjectSectionProps) {
                   .then((response) => {
                     console.log("done with", response);
                     setIsLoading(false);
+                    router.push("/");
                   })
                   .catch((reason) => {
                     console.error(reason);
