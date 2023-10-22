@@ -10,5 +10,9 @@ export default function Page({ children }: { children: React.ReactNode }) {
       headers: { "Content-Type": "application/json" },
     }).then((response) => response.json());
   }
-  return <CreateProjectSection createProject={createProject} />;
+  return (
+    <div className="flex w-full justify-center">
+      <CreateProjectSection createProject={createProject} />
+    </div>
+  );
 }

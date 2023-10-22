@@ -1,3 +1,4 @@
+// TODO: Update initial code
 export const solidityPlaceholder = `// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 

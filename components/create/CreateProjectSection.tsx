@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import _ from "lodash";
+import _, { size } from "lodash";
 import AddContractButton from "./AddContractButton";
 import { ContractType, ScriptType } from "@/utils";
 import TemplateRow, { TemplateRowProps } from "@/components/create/TemplateRow";
@@ -9,7 +9,16 @@ import {
   solidityPlaceholder,
   yamlPlaceholder,
 } from "@/components/create/CodePlaceholder";
-import { Button, Textarea } from "@nextui-org/react";
+import {
+  Button,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  Textarea,
+  useDisclosure,
+} from "@nextui-org/react";
 import { BsCloudUploadFill } from "react-icons/bs";
 import {
   CreateProjectRequest,
@@ -29,6 +38,7 @@ export default function CreateProjectSection(props: CreateProjectSectionProps) {
   const [templateRows, setTemplateRows] = useState<TemplateRowProps[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [projectName, setProjectName] = useState("");
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const toText = (c: ContractType) => {
     switch (c) {
@@ -73,75 +83,106 @@ export default function CreateProjectSection(props: CreateProjectSectionProps) {
   };
   return (
     <div className="container flex flex-col items-center">
-      {templateRows.map((props) => {
-        return (
-          <TemplateRow
-            key={props.id}
-            id={props.id}
-            text={props.text}
-            contractType={props.contractType}
-            solidityScript={props.solidityScript}
-            yamlConfiguration={props.yamlConfiguration}
-            setScript={setScript}
-          />
-        );
-      })}
-      {/* TODO: Improve UI of this section, could fix these comps to buttom and reorder them */}
-      <div className="flex flex-col">
-        <div className="flex mb-2">
-          {templateRows.length > 0 ? (
-            <Textarea
-              minRows={1}
-              isRequired
-              label="Project name"
-              labelPlacement="outside"
-              placeholder="Enter your project name"
-              className="max-w-xs"
-              onValueChange={(value) => {
-                setProjectName(value);
-              }}
+      <div className="container max-w-[1024px] gap-4 relative">
+        <div className="mx-auto w-full px-5 pb-6 flex flex-row justify-between">
+          <h1 className="text-3xl font-thin uppercase justify-center">
+            Create New Project
+          </h1>
+          <div className="flex flex-row">
+            <div className="flex flex-row gap-2">
+              <AddContractButton
+                onClick={onClickAddContract}
+              ></AddContractButton>
+              {templateRows.length > 0 ? (
+                <Button
+                  isLoading={isLoading}
+                  color="primary"
+                  onClick={() => {
+                    onOpen();
+                    return;
+                  }}
+                >
+                  <BsCloudUploadFill />
+                  Create project
+                </Button>
+              ) : null}
+            </div>
+          </div>
+        </div>
+        {templateRows.map((props) => {
+          return (
+            <TemplateRow
+              key={props.id}
+              id={props.id}
+              text={props.text}
+              contractType={props.contractType}
+              solidityScript={props.solidityScript}
+              yamlConfiguration={props.yamlConfiguration}
+              setScript={setScript}
             />
-          ) : null}
-        </div>
-        <div className="flex flex-row gap-2">
-          <AddContractButton onClick={onClickAddContract}></AddContractButton>
-          {templateRows.length > 0 ? (
-            <Button
-              isLoading={isLoading}
-              color="primary"
-              onClick={() => {
-                if (projectName === "") return;
-                setIsLoading(true);
-                // prepare request body
-                const request: CreateProjectRequest = {
-                  name: projectName,
-                  templates: templateRows.map((template, i) => {
-                    return {
-                      script: template.solidityScript,
-                      configuration: template.yamlConfiguration,
-                      sequence: i,
-                      status: Status.ACTIVE,
-                    };
-                  }),
-                };
-                props
-                  .createProject(request)
-                  .then((response) => {
-                    console.log("done with", response);
-                    setIsLoading(false);
-                    router.push("/");
-                  })
-                  .catch((reason) => {
-                    console.error(reason);
-                    // TODO: show error breadcrumb
-                  });
-              }}
-            >
-              <BsCloudUploadFill />
-              Create project
-            </Button>
-          ) : null}
-        </div>
+          );
+        })}
+        <Modal size="sm" isOpen={isOpen} onClose={onClose}>
+          <ModalContent>
+            {(onClose) => (
+              <>
+                <ModalHeader className="flex flex-col gap-1">
+                  Project name
+                </ModalHeader>
+                <ModalBody>
+                  <Textarea
+                    minRows={1}
+                    placeholder="Enter your project name"
+                    className="max-w-sm"
+                    onValueChange={(value) => {
+                      setProjectName(value);
+                    }}
+                  />
+                </ModalBody>
+                <ModalFooter>
+                  <Button color="danger" variant="light" onPress={onClose}>
+                    Close
+                  </Button>
+                  <Button
+                    color="primary"
+                    onPress={() => {
+                      if (projectName === "") return;
+                      setIsLoading(true);
+                      // prepare request body
+                      const request: CreateProjectRequest = {
+                        name: projectName,
+                        templates: templateRows.map((template, i) => {
+                          return {
+                            script: template.solidityScript,
+                            configuration: template.yamlConfiguration,
+                            sequence: i,
+                            status: Status.ACTIVE,
+                          };
+                        }),
+                      };
+                      props
+                        .createProject(request)
+                        .then((response) => {
+                          console.log("done with", response);
+                          setIsLoading(false);
+                          router.push("/");
+                        })
+                        .catch((reason) => {
+                          console.error(reason);
+                          // TODO: show error breadcrumb
+                        });
+                      onClose();
+                    }}
+                    isLoading={isLoading}
+                    isDisabled={projectName === ""}
+                  >
+                    Confirm
+                  </Button>
+                </ModalFooter>
+              </>
+            )}
+          </ModalContent>
+        </Modal>
       </div>
     </div>
   );

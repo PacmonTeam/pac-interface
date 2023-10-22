@@ -1,3 +1,4 @@
+// TODO: merge with status below
 enum STATUS {
   ACTIVE,
   INACTIVE,
@@ -48,5 +49,5 @@ export interface CreateProjectRequest {
 }
 
 export interface CreateProjectResponse {
-
+  // TODO: Fill in if we use or delete
 }
