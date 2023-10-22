@@ -1,9 +1,11 @@
 import "@/styles/globals.css";
+import "react-toastify/dist/ReactToastify.css";
 
 import type { AppProps } from "next/app";
 
 import { Inter } from "next/font/google";
 import { NextUIProvider } from "@nextui-org/react";
+import { ToastContainer } from "react-toastify";
 import Head from "next/head";
 import Layout from "@/components/Layout";
 
@@ -20,6 +22,7 @@ export default function RootLayout({ Component, pageProps }: AppProps) {
         <Layout>
           <Component {...pageProps} />
         </Layout>
+        <ToastContainer position="bottom-right" theme="dark" />
       </NextUIProvider>
     </main>
   );
