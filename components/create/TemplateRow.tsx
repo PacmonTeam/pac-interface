@@ -1,7 +1,7 @@
 import CodeMirror from "@uiw/react-codemirror";
 import { langs } from "@uiw/codemirror-extensions-langs";
 import { ContractType, ScriptType } from "@/utils";
-import { vscodeDark, vscodeDarkInit } from "@uiw/codemirror-theme-vscode";
+import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import { MdOutlineEditOff, MdOutlineModeEditOutline } from "react-icons/md";
 import { SiSolidity, SiYaml } from "react-icons/si";
 
@@ -17,15 +17,6 @@ export interface TemplateRowProps {
 export default function TemplateRow(props: TemplateRowProps) {
   const isSolidityScriptEditable = props.contractType === ContractType.CUSTOM;
   const editableTheme = vscodeDark;
-  // TODO: Make the line highlight disappear, currently still showing color with undefined assigned
-  const notEditableTheme = vscodeDarkInit({
-    settings: {
-      lineHighlight: undefined,
-    },
-  });
-  const solidityScriptTheme = isSolidityScriptEditable
-    ? vscodeDark
-    : notEditableTheme;
   const solidityEditableBadge = () => {
     return isSolidityScriptEditable ? (
       <span className="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium text-green-700 border-green-600 ring-1 ring-inset ring-green-600/20">
@@ -54,7 +45,10 @@ export default function TemplateRow(props: TemplateRowProps) {
             value={props.solidityScript}
             height="200px"
             extensions={[langs.solidity()]}
-            theme={solidityScriptTheme}
+            basicSetup={{
+              highlightActiveLine: isSolidityScriptEditable,
+            }}
+            theme={vscodeDark}
             editable={isSolidityScriptEditable}
             onChange={(value) => {
               if (props.setScript)
