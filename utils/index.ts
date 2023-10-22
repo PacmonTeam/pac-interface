@@ -1,2 +1,2 @@
-import { ContractType } from "./Constants";
-export { ContractType };
+import { ContractType, ScriptType } from "./Constants";
+export { ContractType, ScriptType };

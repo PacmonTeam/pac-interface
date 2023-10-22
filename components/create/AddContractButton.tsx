@@ -6,6 +6,7 @@ import {
   DropdownMenu,
   DropdownItem,
 } from "@nextui-org/dropdown";
+import { IoIosArrowDropdown } from "react-icons/io";
 
 interface AddContractButtonProps {
   onClick: (c: ContractType) => void;
@@ -22,7 +23,10 @@ export default function AddContractButton({ onClick }: AddContractButtonProps) {
     <div>
       <Dropdown>
         <DropdownTrigger>
-          <Button variant="bordered">Add Contract</Button>
+          <Button variant="bordered">
+            Add Contract&nbsp;
+            <IoIosArrowDropdown />
+          </Button>
         </DropdownTrigger>
         <DropdownMenu aria-label="Static Actions">
           {contractTypeItems.map((item) => {
