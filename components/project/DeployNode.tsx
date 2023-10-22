@@ -129,7 +129,10 @@ export default function DeployNode({ project, nodeType }: DeployNode) {
                 <Button
                   color="primary"
                   size="sm"
-                  onPress={onCreateNode}
+                  onPress={async () => {
+                    await onCreateNode();
+                    onClose();
+                  }}
                   isLoading={deploying}
                 >
                   Create Node
