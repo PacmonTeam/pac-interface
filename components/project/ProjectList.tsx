@@ -12,11 +12,10 @@ import { TbFaceIdError } from "react-icons/tb";
 import { GoRocket } from "react-icons/go";
 
 import { formatDate } from "@/lib/formatDate";
-import { useProjects } from "@/lib/useProject";
+import { useProjects } from "@/lib/useProjects";
 import { AVAILABLE_NODES } from "@/lib/constants";
 
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
-import Link from "next/link";
 
 type TemplateModel = {
   script: string;
@@ -29,17 +28,6 @@ type ProjectCardProps = {
     template: TemplateModel[];
     createdAt: string;
   };
-};
-
-const RenderHero = () => {
-  return (
-    <div className="mx-auto w-full px-5 pb-6 flex flex-row justify-between">
-      <h1 className="text-3xl font-thin uppercase justify-center">Project</h1>
-      <Button as={Link} color="primary" href="/create">
-        Create New Project
-      </Button>
-    </div>
-  );
 };
 
 export default function ProjectList() {
@@ -69,12 +57,7 @@ export default function ProjectList() {
       <ProjectCard key={index} isLoading={false} project={project} />
     ));
   };
-  return (
-    <div className="grid gap-2">
-      {RenderHero()}
-      {renderCardList()}
-    </div>
-  );
+  return <div className="grid gap-2">{renderCardList()}</div>;
 }
 
 function ProjectCard({ project }: ProjectCardProps) {

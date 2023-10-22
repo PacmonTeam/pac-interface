@@ -19,6 +19,18 @@ export default function NavbarComponent() {
           </div>
         </Link>
       </NavbarBrand>
+      <NavbarContent as="div" className="items-center" justify="start">
+        <NavbarItem>
+          <Link href="/project" color="foreground">
+            Project
+          </Link>
+        </NavbarItem>
+        <NavbarItem isActive>
+          <Link href="/node" aria-current="page">
+            Node
+          </Link>
+        </NavbarItem>
+      </NavbarContent>
       <NavbarContent as="div" className="items-center" justify="end">
         <NavbarItem>
           <Link
