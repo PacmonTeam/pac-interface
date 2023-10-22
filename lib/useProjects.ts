@@ -35,7 +35,7 @@ export const useDeleteProject = () => {
           render: `Project "${project.name}" was deleted!`,
           type: "success",
           icon: "🌈",
-          autoClose: 15000,
+          autoClose: 8000,
           closeOnClick: true,
           isLoading: false,
         });
@@ -47,7 +47,7 @@ export const useDeleteProject = () => {
       toast.update(tId, {
         render: "Delete Project Fail",
         type: "error",
-        autoClose: 15000,
+        autoClose: 8000,
         closeOnClick: true,
         isLoading: false,
       });
@@ -79,7 +79,7 @@ export const useDeployProject = () => {
           render: `Project "${project.name}" was deployed!`,
           type: "success",
           icon: "🌈",
-          autoClose: 15000,
+          autoClose: 8000,
           closeOnClick: true,
           isLoading: false,
         });
@@ -92,7 +92,7 @@ export const useDeployProject = () => {
         render: "Deploy Project Fail!",
         type: "error",
         closeOnClick: true,
-        autoClose: 15000,
+        autoClose: 8000,
         isLoading: false,
       });
       console.error(error);
