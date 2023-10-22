@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import _ from "lodash";
-import AddContractButton from "../../components/create/AddContractButton";
+import AddContractButton from "./AddContractButton";
 import { ContractType, ScriptType } from "@/utils";
 import TemplateRow, { TemplateRowProps } from "@/components/create/TemplateRow";
 import {

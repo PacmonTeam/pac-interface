@@ -1,5 +1,5 @@
 import { BASE_API } from "@/config/url";
-import CreateProjectSection from "./CreateProjectSection";
+import CreateProjectSection from "../../components/create/CreateProjectSection";
 import { CreateProjectRequest } from "@/lib/types";
 
 export default function Page({ children }: { children: React.ReactNode }) {
