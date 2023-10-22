@@ -16,6 +16,7 @@ import { useProjects } from "@/lib/useProjects";
 import { AVAILABLE_NODES } from "@/lib/constants";
 
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
+import Link from "next/link";
 
 type TemplateModel = {
   script: string;
@@ -24,6 +25,7 @@ type TemplateModel = {
 type ProjectCardProps = {
   isLoading: boolean;
   project: {
+    id: string;
     name: string;
     template: TemplateModel[];
     createdAt: string;
@@ -83,7 +85,12 @@ function ProjectCard({ project }: ProjectCardProps) {
               </div>
             </div>
             <div className="flex gap-2">
-              <Button size="sm" startContent={<AiFillEdit />}>
+              <Button
+                size="sm"
+                startContent={<AiFillEdit />}
+                as={Link}
+                href={`/project/${project.id}`}
+              >
                 Edit
               </Button>
               <Button
