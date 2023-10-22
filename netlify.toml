@@ -2,4 +2,4 @@
   from = "/"
   to = "/project"
   status = 200
-  force = false
+  force = true
