@@ -1,5 +1,5 @@
 import useSwr from "swr";
-import { BASE_API } from "../config/url";
+import { BASE_API } from "@/config/url";
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 

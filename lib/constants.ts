@@ -12,6 +12,7 @@ export const AVAILABLE_NODES = [
     RAM: "2 GB",
     Storage: "50 GB",
     isSSD: true,
+    isDisabled: true,
   },
   {
     id: "3",

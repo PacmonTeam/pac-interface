@@ -1,5 +1,4 @@
 import {
-  Button,
   Navbar,
   NavbarBrand,
   NavbarContent,
@@ -23,17 +22,15 @@ export default function NavbarComponent() {
       <NavbarContent as="div" className="items-center" justify="end">
         <NavbarItem>
           <Link
-            className="text-xl"
+            className="text-xl text-default-500 hover:opacity-80 transition-opacity"
             target="_bank"
             href="https://github.com/PAC-BKKBuidl2023"
           >
-            <AiFillGithub />
+            <AiFillGithub size="30" />
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Button as={Link} color="primary" href="/create">
-            Create New Project
-          </Button>
+          <div>0x626a...4000</div>
         </NavbarItem>
       </NavbarContent>
     </Navbar>
