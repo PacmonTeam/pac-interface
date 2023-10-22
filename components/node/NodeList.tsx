@@ -1,11 +1,12 @@
 import { formatDate } from "@/lib/formatDate";
-import { Button, Snippet, Spinner } from "@nextui-org/react";
+import { Button, Snippet, Spinner, Link as LinkUI } from "@nextui-org/react";
 import { AiFillDelete, AiOutlineSetting } from "react-icons/ai";
 import { FaEthereum } from "react-icons/fa";
 import { TbFaceIdError } from "react-icons/tb";
 
-import { useNodes } from "@/lib/useNodes";
+import { useNodes, useDeleteNode } from "@/lib/useNodes";
 import { Node } from "@/lib/types";
+import Link from "next/link";
 
 interface NodeItemProps extends Node {}
 
@@ -19,6 +20,7 @@ const ActiveStatus = () => (
 );
 
 const NodeItem = (node: NodeItemProps) => {
+  const { deleteNode, loading: deleting } = useDeleteNode();
   return (
     <li className="grid grid-cols-12 gap-4 py-4">
       <div className="col-span-3 flex items-center">
@@ -46,7 +48,12 @@ const NodeItem = (node: NodeItemProps) => {
         </Snippet>
       </div>
       <div className="col-span-3 flex items-center gap-2 justify-end px-2">
-        <Button size="sm" startContent={<AiOutlineSetting />}>
+        <Button
+          size="sm"
+          startContent={<AiOutlineSetting />}
+          as={Link}
+          href={`/node/${node.id}`}
+        >
           Manage
         </Button>
         <Button
@@ -54,6 +61,8 @@ const NodeItem = (node: NodeItemProps) => {
           color="danger"
           variant="ghost"
           startContent={<AiFillDelete />}
+          onPress={() => deleteNode(node)}
+          isLoading={deleting}
         >
           Delete
         </Button>
@@ -74,11 +83,22 @@ export default function NodeList() {
       return (
         <div className="rounded-lg border border-dashed border-neutral-50/50 bg-transparent p-4">
           <div className="w-full text-default-500/80">
-            <div className="flex justify-center items-center">
+            <div className="flex justify-center items-center pt-6">
               <TbFaceIdError size="50" />
             </div>
             <div className="flex justify-center items-center text-xs font-bold">
               Node is Empty!
+            </div>
+            <div className="flex justify-center items-center text-xs pt-4 pb-6">
+              You can set up and deploy a new node on
+              <LinkUI
+                className="text-xs pl-1"
+                href="/project"
+                underline="always"
+                as={Link}
+              >
+                Project Page
+              </LinkUI>
             </div>
           </div>
         </div>
