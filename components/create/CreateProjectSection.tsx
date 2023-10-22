@@ -26,6 +26,7 @@ import {
   Status,
 } from "@/lib/types";
 import { useRouter } from "next/router";
+import { toast } from "react-toastify";
 
 interface CreateProjectSectionProps {
   createProject: (
@@ -150,6 +151,9 @@ export default function CreateProjectSection(props: CreateProjectSectionProps) {
                     onPress={() => {
                       if (projectName === "") return;
                       setIsLoading(true);
+                      const tId = toast.loading(
+                        `Creating project "${projectName}"`
+                      );
                       // prepare request body
                       const request: CreateProjectRequest = {
                         name: projectName,
@@ -167,11 +171,25 @@ export default function CreateProjectSection(props: CreateProjectSectionProps) {
                         .then((response) => {
                           console.log("done with", response);
                           setIsLoading(false);
-                          router.push("/");
+                          toast.update(tId, {
+                            render: `Project "${projectName}" was created!`,
+                            type: "success",
+                            icon: "🌈",
+                            autoClose: 5000,
+                            closeOnClick: true,
+                            isLoading: false,
+                          });
+                          router.push("/project");
                         })
                         .catch((reason) => {
                           console.error(reason);
-                          // TODO: show error breadcrumb
+                          toast.update(tId, {
+                            render: "Fail to create project",
+                            type: "error",
+                            autoClose: 5000,
+                            closeOnClick: true,
+                            isLoading: false,
+                          });
                         });
                       onClose();
                     }}
