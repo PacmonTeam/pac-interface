@@ -7,6 +7,7 @@ import { SiSolidity, SiYaml } from "react-icons/si";
 
 export interface TemplateRowProps {
   id: string;
+  index: number;
   text: string;
   contractType: ContractType;
   solidityScript: string;
@@ -32,7 +33,11 @@ export default function TemplateRow(props: TemplateRowProps) {
   };
   return (
     <div className="flex flex-col mb-4 p-unit-lg box-border rounded-lg bg-content1 w-full">
-      <div className="mb-4">{props.text}</div>
+      <div className="mb-4">
+        <span className="text-slate-400 font-light">#{props.index + 1}:</span>
+        &nbsp;
+        <span className="text-slate-100">{props.text}</span>
+      </div>
       <div className="flex flex-row gap-12">
         <div className="w-2/3">
           <div className="flex flex-row gap-2 mb-2">

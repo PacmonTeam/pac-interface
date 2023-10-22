@@ -73,6 +73,7 @@ export default function CreateProjectSection(props: CreateProjectSectionProps) {
       ...templateRows,
       {
         id: `${toText(c)}-${templateRows.length}`,
+        index: templateRows.length,
         text: toText(c),
         contractType: c,
         solidityScript: solidityPlaceholder,
@@ -114,6 +115,7 @@ export default function CreateProjectSection(props: CreateProjectSectionProps) {
             <TemplateRow
               key={props.id}
               id={props.id}
+              index={props.index}
               text={props.text}
               contractType={props.contractType}
               solidityScript={props.solidityScript}
