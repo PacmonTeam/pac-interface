@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import _, { size } from "lodash";
 import AddContractButton from "./AddContractButton";
 import { ContractType, ScriptType } from "@/utils";
 import TemplateRow, { TemplateRowProps } from "@/components/create/TemplateRow";
