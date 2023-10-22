@@ -1,5 +1,4 @@
 [[redirects]]
   from = "/"
   to = "/project"
-  status = 200
   force = true
