@@ -23,7 +23,7 @@ export default function RootLayout({ Component, pageProps }: AppProps) {
         <Layout>
           <Component {...pageProps} />
         </Layout>
-        <ToastContainer position="bottom-right" theme="dark" icon={false} />
+        <ToastContainer position="bottom-right" theme="dark" />
       </NextUIProvider>
     </main>
   );

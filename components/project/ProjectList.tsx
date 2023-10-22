@@ -9,15 +9,16 @@ import {
 import { useState } from "react";
 import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 import { TbFaceIdError } from "react-icons/tb";
-import { GoRocket } from "react-icons/go";
+
+import { useProjects, useDeleteProject } from "@/lib/useProjects";
 
 import { formatDate } from "@/lib/formatDate";
-import { useProjects, useDeleteProject } from "@/lib/useProjects";
 import { AVAILABLE_NODES } from "@/lib/constants";
-
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
+
 import Link from "next/link";
 import { Project } from "@/lib/types";
+import DeployNode from "./DeployNode";
 
 type ProjectCardProps = {
   isLoading: boolean;
@@ -56,7 +57,7 @@ export default function ProjectList() {
 
 function ProjectCard({ project }: ProjectCardProps) {
   const [selectedNode, setSelectedNode] = useState<any>();
-  const [deleteProjectWithId] = useDeleteProject();
+  const [deleteProject] = useDeleteProject();
   const disabledNode = AVAILABLE_NODES.filter((e) => e.isDisabled).map(
     (e) => e.id
   );
@@ -91,7 +92,7 @@ function ProjectCard({ project }: ProjectCardProps) {
                 variant="ghost"
                 color="danger"
                 startContent={<AiFillDelete />}
-                onPress={() => deleteProjectWithId(project)}
+                onPress={() => deleteProject(project)}
               >
                 Delete
               </Button>
@@ -117,9 +118,10 @@ function ProjectCard({ project }: ProjectCardProps) {
                   </SelectItem>
                 ))}
               </Select>
-              <Button size="sm" color="success" startContent={<GoRocket />}>
-                Deploy New Node
-              </Button>
+              <DeployNode
+                project={project}
+                nodeType={AVAILABLE_NODES.find((e) => e.id === selectedNode)}
+              />
             </div>
           </div>
         </div>

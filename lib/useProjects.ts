@@ -2,6 +2,7 @@ import useSwr from "swr";
 import { BASE_API } from "@/config/url";
 import { toast } from "react-toastify";
 import { Project } from "./types";
+import { useState } from "react";
 
 export const useProjects = () => {
   const { data, error, isLoading } = useSwr(
@@ -41,29 +42,42 @@ export const useDeleteProject = () => {
 };
 
 export const useDeployProject = () => {
+  const [loading, setLoading] = useState(false);
   const deployProject = async (project: Project, nodeName: string) => {
-    toast.loading(`Deploying node : ${nodeName}`, {
-      icon: "🚀🚀🚀",
-    });
+    setLoading(true);
+    const tId = toast.loading(`Deploying node "${nodeName}"`);
     try {
       const response = await fetch(`${BASE_API}/projects/deploy`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ projectId: project.id, nodeName }),
       });
-      const { success } = await response.json();
+      const { name } = await response.json();
 
-      if (success) {
-        toast.success(`Project "${project.name}" was deployed!`, {
+      if (name === nodeName) {
+        toast.update(tId, {
+          render: `Project "${project.name}" was deployed!`,
+          type: "success",
           icon: "🌈",
+          autoClose: 15000,
+          closeOnClick: true,
+          isLoading: false,
         });
       } else {
-        throw new Error("Success is not True!");
+        throw new Error("Node not found!");
       }
     } catch (error) {
-      toast.error("Deploy Project Fail!", { icon: "❗️" });
+      toast.update(tId, {
+        render: "Deploy Project Fail!",
+        type: "error",
+        closeOnClick: true,
+        autoClose: 15000,
+        isLoading: false,
+      });
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
-  return [deployProject];
+  return { deployProject, loading };
 };
