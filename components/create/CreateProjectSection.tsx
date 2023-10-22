@@ -4,10 +4,7 @@ import { useState } from "react";
 import AddContractButton from "./AddContractButton";
 import { ContractType, ScriptType } from "@/utils";
 import TemplateRow, { TemplateRowProps } from "@/components/create/TemplateRow";
-import {
-  solidityPlaceholder,
-  yamlPlaceholder,
-} from "@/components/create/CodePlaceholder";
+import { getPlaceholderTemplateCode } from "@/components/create/CodePlaceholder";
 import {
   Button,
   Modal,
@@ -68,16 +65,22 @@ export default function CreateProjectSection(props: CreateProjectSectionProps) {
     });
     setTemplateRows(nextTemplateRows);
   };
-  const onClickAddContract = (c: ContractType) => {
+  const onClickAddContract = (contractType: ContractType) => {
     setTemplateRows([
       ...templateRows,
       {
-        id: `${toText(c)}-${templateRows.length}`,
+        id: `${toText(contractType)}-${templateRows.length}`,
         index: templateRows.length,
-        text: toText(c),
-        contractType: c,
-        solidityScript: solidityPlaceholder,
-        yamlConfiguration: yamlPlaceholder,
+        text: toText(contractType),
+        contractType: contractType,
+        solidityScript: getPlaceholderTemplateCode(
+          ScriptType.SOLIDITY,
+          contractType
+        ),
+        yamlConfiguration: getPlaceholderTemplateCode(
+          ScriptType.YAML,
+          contractType
+        ),
         setScript: setScript,
       },
     ]);
