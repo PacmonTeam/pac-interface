@@ -12,24 +12,16 @@ import { TbFaceIdError } from "react-icons/tb";
 import { GoRocket } from "react-icons/go";
 
 import { formatDate } from "@/lib/formatDate";
-import { useProjects } from "@/lib/useProjects";
+import { useProjects, useDeleteProject } from "@/lib/useProjects";
 import { AVAILABLE_NODES } from "@/lib/constants";
 
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 import Link from "next/link";
+import { Project } from "@/lib/types";
 
-type TemplateModel = {
-  script: string;
-  configuration: string;
-};
 type ProjectCardProps = {
   isLoading: boolean;
-  project: {
-    id: string;
-    name: string;
-    template: TemplateModel[];
-    createdAt: string;
-  };
+  project: Project;
 };
 
 export default function ProjectList() {
@@ -64,6 +56,7 @@ export default function ProjectList() {
 
 function ProjectCard({ project }: ProjectCardProps) {
   const [selectedNode, setSelectedNode] = useState<any>();
+  const [deleteProjectWithId] = useDeleteProject();
   const disabledNode = AVAILABLE_NODES.filter((e) => e.isDisabled).map(
     (e) => e.id
   );
@@ -98,6 +91,7 @@ function ProjectCard({ project }: ProjectCardProps) {
                 variant="ghost"
                 color="danger"
                 startContent={<AiFillDelete />}
+                onPress={() => deleteProjectWithId(project)}
               >
                 Delete
               </Button>
