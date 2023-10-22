@@ -31,3 +31,22 @@ export interface Node {
   createdAt: string;
   updatedAt: string;
 }
+export enum Status {
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
+}
+
+interface TemplateRequest {
+  script: string;
+  configuration: string;
+  sequence: number;
+  status: Status;
+}
+export interface CreateProjectRequest {
+  name: string;
+  templates: TemplateRequest[];
+}
+
+export interface CreateProjectResponse {
+
+}
