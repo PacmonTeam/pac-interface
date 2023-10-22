@@ -40,7 +40,6 @@ export default function DeployNode({ project, nodeType }: DeployNode) {
 
     await deployProject(project, nodeName);
   };
-  console.log("node type =:", nodeType);
   return (
     <>
       <Button
