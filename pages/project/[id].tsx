@@ -1,13 +1,8 @@
 import AddContractButton from "@/components/create/AddContractButton";
-import { TemplateRowProps } from "@/components/create/TemplateRow";
-import EditProject from "@/components/project/EditProject";
-import {
-  getTemplateRowPropsArrayFromProject,
-  toText,
-} from "@/lib/TemplateUtils";
-import { ProjectResponse } from "@/lib/types";
+import TemplateRow, { TemplateRowProps } from "@/components/create/TemplateRow";
+import { getTemplateRowPropsArrayFromProject } from "@/lib/TemplateUtils";
 import { useProject } from "@/lib/useProjects";
-import { ContractType, ScriptType } from "@/utils";
+import { ScriptType } from "@/utils";
 import { Button } from "@nextui-org/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -17,27 +12,39 @@ export default function Page() {
   const router = useRouter();
   const projectId: number = parseInt(router.query.id?.toString() || "0");
   const { data: project } = useProject(projectId);
-  console.log(project);
 
   const [templateRowProps, setTemplateRowProps] = useState<TemplateRowProps[]>(
-    getTemplateRowPropsArrayFromProject(
-      project,
-      (script: string, scriptType: ScriptType, id: string) => {
-        const nextTemplateRowProps = templateRowProps.map((props) => {
-          if (props.id === id) {
-            switch (scriptType) {
-              case ScriptType.SOLIDITY:
-                return { ...props, solidityScript: script };
-              case ScriptType.YAML:
-                return { ...props, yamlConfiguration: script };
-            }
-          }
-          return props;
-        });
-        setTemplateRowProps(nextTemplateRowProps);
-      }
-    )
+    []
   );
+
+  useEffect(() => {
+    setTemplateRowProps((t) =>
+      getTemplateRowPropsArrayFromProject(
+        project,
+        (script: string, scriptType: ScriptType, id: string) => {
+          const nextTemplateRowProps = t.map((props) => {
+            if (props.id === id) {
+              switch (scriptType) {
+                case ScriptType.SOLIDITY:
+                  return { ...props, solidityScript: script };
+                case ScriptType.YAML:
+                  return { ...props, yamlConfiguration: script };
+              }
+            }
+            return props;
+          });
+          setTemplateRowProps(nextTemplateRowProps);
+        }
+      )
+    );
+  }, [project]);
+
+  const deleteTemplateRowProps = (id: string) => {
+    const nextTemplateRowProps = templateRowProps.filter(
+      (props) => props.id !== id
+    );
+    setTemplateRowProps(nextTemplateRowProps);
+  };
 
   return (
     <div className="container flex flex-col items-center">
@@ -65,7 +72,23 @@ export default function Page() {
           </div>
         </div>
       </div>
-      <EditProject templateRowProps={templateRowProps} />
+      <div>
+        {templateRowProps.map((props) => {
+          return (
+            <TemplateRow
+              key={props.id}
+              id={props.id}
+              index={props.index}
+              text={props.text}
+              contractType={props.contractType}
+              solidityScript={props.solidityScript}
+              yamlConfiguration={props.yamlConfiguration}
+              setScript={props.setScript}
+              deleteTemplate={deleteTemplateRowProps}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 }

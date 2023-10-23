@@ -52,6 +52,12 @@ export default function CreateProjectSection(props: CreateProjectSectionProps) {
     });
     setTemplateRows(nextTemplateRows);
   };
+  const deleteTemplateRowProps = (id: string) => {
+    const nextTemplateRowProps = templateRows.filter(
+      (props) => props.id !== id
+    );
+    setTemplateRows(nextTemplateRowProps);
+  };
   const onClickAddContract = (contractType: ContractType) => {
     setTemplateRows([
       ...templateRows,
@@ -110,6 +116,7 @@ export default function CreateProjectSection(props: CreateProjectSectionProps) {
               solidityScript={props.solidityScript}
               yamlConfiguration={props.yamlConfiguration}
               setScript={setScript}
+              deleteTemplate={deleteTemplateRowProps}
             />
           );
         })}

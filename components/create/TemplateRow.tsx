@@ -4,12 +4,15 @@ import { ContractType, ScriptType } from "@/utils";
 import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import { MdOutlineEditOff, MdOutlineModeEditOutline } from "react-icons/md";
 import { SiSolidity, SiYaml } from "react-icons/si";
+import { Button } from "@nextui-org/react";
 
 export type TemplateRowPropsSetScriptFunction = (
   script: string,
   scriptType: ScriptType,
   id: string
 ) => void;
+
+type TemplateRowPropsDeleteTemplateFunction = (id: string) => void;
 
 export interface TemplateRowProps {
   id: string;
@@ -19,6 +22,7 @@ export interface TemplateRowProps {
   solidityScript: string;
   yamlConfiguration: string;
   setScript?: TemplateRowPropsSetScriptFunction;
+  deleteTemplate?: TemplateRowPropsDeleteTemplateFunction;
 }
 
 export default function TemplateRow(props: TemplateRowProps) {
@@ -39,10 +43,24 @@ export default function TemplateRow(props: TemplateRowProps) {
   };
   return (
     <div className="flex flex-col mb-4 p-unit-lg box-border rounded-lg bg-content1 w-full">
-      <div className="mb-4">
-        <span className="text-slate-400 font-light">#{props.index + 1}:</span>
-        &nbsp;
-        <span className="text-slate-100">{props.text}</span>
+      <div className="flex flex-row mb-4 justify-between items-center">
+        <div className="flex flex-row">
+          <span className="text-slate-400 font-light">#{props.index + 1}:</span>
+          &nbsp;
+          <span className="text-slate-100">{props.text}</span>
+        </div>
+        <div className="flex flex-row">
+          <Button
+            color="danger"
+            variant="bordered"
+            size="sm"
+            onClick={() => {
+              if (props.deleteTemplate) props.deleteTemplate(props.id);
+            }}
+          >
+            Delete
+          </Button>
+        </div>
       </div>
       <div className="flex flex-row text-xs">
         <div className="w-2/3">

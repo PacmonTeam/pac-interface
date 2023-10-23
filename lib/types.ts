@@ -66,7 +66,7 @@ interface TemplateResponse {
 export interface ProjectResponse {
   id: number;
   name: string;
-  templates: Array<TemplateResponse>;
+  templates?: Array<TemplateResponse>;
   createdAt: Date;
   updatedAt: Date;
 }

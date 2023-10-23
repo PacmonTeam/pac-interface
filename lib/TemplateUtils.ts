@@ -21,7 +21,7 @@ export const getTemplateRowPropsArrayFromProject = (
   project: ProjectResponse | undefined, setScript: TemplateRowPropsSetScriptFunction
 ): TemplateRowProps[] => {
   return project
-    ? project.templates.map((template, i) => {
+    ? (project.templates ? project.templates.map((template, i) => {
       // TODO: Get the contract type from configuration
       const contractType = ContractType.ERC_20;
       return {
@@ -34,6 +34,6 @@ export const getTemplateRowPropsArrayFromProject = (
         yamlConfiguration: template.configuration,
         setScript: setScript,
       };
-    })
+    }) : [])
     : [];
 };
