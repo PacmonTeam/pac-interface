@@ -758,15 +758,15 @@ manage:
     - name: mint
       arguments:
         - name: to
-					type: address
+          type: address
         - name: amount
-					type: uint256
+          type: uint256
     - name: transfer
       arguments:
         - name: to
-					type: address
+          type: address
         - name: amount
-					type: uint256
+          type: uint256
 output: "TPAC_ERC20"`;
 
 // TODO: should fetch initial code for each protocol from API
