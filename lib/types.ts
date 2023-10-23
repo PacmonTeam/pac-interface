@@ -24,14 +24,31 @@ export interface Project {
   updatedAt: string;
 }
 
+export interface Contract {
+  id: number;
+  address: string;
+  name: string;
+  script: string;
+  configuration: string;
+  sequence: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Node {
   id: number;
   name: string;
   rpc: string;
   project: Project;
+  contracts: Contract[];
   createdAt: string;
   updatedAt: string;
 }
+
+export interface NodeWithSigner extends Node {
+  signers: { address: string; privateKey: string }[];
+}
+
 export enum Status {
   ACTIVE = "ACTIVE",
   INACTIVE = "INACTIVE",
