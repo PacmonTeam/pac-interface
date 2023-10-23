@@ -49,6 +49,27 @@ export interface NodeWithSigner extends Node {
   signers: { address: string; privateKey: string }[];
 }
 
+enum ArgumentType {
+  address,
+  uint256,
+}
+
+export interface FunctionArgument {
+  name: string;
+  type: ArgumentType;
+}
+
+export interface FunctionOnConfiguration {
+  name: string;
+  arguments: FunctionArgument[];
+}
+
+export interface ManageOnConfiguration {
+  manage: {
+    functions: FunctionOnConfiguration[];
+  };
+}
+
 export enum Status {
   ACTIVE = "ACTIVE",
   INACTIVE = "INACTIVE",

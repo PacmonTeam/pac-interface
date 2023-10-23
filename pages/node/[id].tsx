@@ -2,7 +2,7 @@ import { Spinner, Snippet, Input, Button } from "@nextui-org/react";
 import { useRouter } from "next/router";
 
 import { useManageNode } from "@/lib/useManageNode";
-import { Contract, NodeWithSigner } from "@/lib/types";
+import { Contract, FunctionOnConfiguration, NodeWithSigner } from "@/lib/types";
 import ManageNodeHeader from "@/components/node/ManageNodeHeader";
 import { convertYAMLStringToJson } from "@/lib/utils";
 import { useEffect, useState } from "react";
@@ -17,29 +17,6 @@ interface ContractWithConverted extends Contract {
 interface ContractList {
   [address: string]: ContractWithConverted;
 }
-
-const mockManageFunctions = [
-  {
-    name: "mint",
-    arguments: [
-      {
-        name: "to",
-        type: "address",
-      },
-      { name: "amount", type: "uint256" },
-    ],
-  },
-  {
-    name: "transfer",
-    arguments: [
-      {
-        name: "to",
-        type: "address",
-      },
-      { name: "amount", type: "uint256" },
-    ],
-  },
-];
 
 export default function Page() {
   const router = useRouter();
@@ -120,48 +97,55 @@ export default function Page() {
   };
 
   const renderManageFunctions = () => {
+    if (!convertedContract) {
+      return;
+    }
+    const selectedContract = convertedContract[selectedContractAddress];
+
     return (
       <div className="mt-8 grid grid-cols-6 gap-6 px-0">
-        {mockManageFunctions.map((manageFn, index) => {
-          return (
-            <>
-              <div key={index} className="text-sm font-extralight leading-6">
-                <>
-                  <span className="text-default-500 pr-2">{index + 1}.</span>
-                  <span className="font-medium">{manageFn.name}</span>
-                </>
-                <div className="mt-2">
-                  <Button size="sm" startContent={<TfiWrite />}>
-                    Call
-                  </Button>
+        {selectedContract.configurationJson.manage?.functions.map(
+          (fn: FunctionOnConfiguration, index: number) => {
+            return (
+              <>
+                <div key={index} className="text-sm font-extralight leading-6">
+                  <>
+                    <span className="text-default-500 pr-2">{index + 1}.</span>
+                    <span className="font-medium">{fn.name}</span>
+                  </>
+                  <div className="mt-2">
+                    <Button size="sm" startContent={<TfiWrite />}>
+                      Call
+                    </Button>
+                  </div>
                 </div>
-              </div>
-              <div className="text-sm col-span-5 mt-0">
-                <ul className="divide-y divide-gray-100/50 rounded-md border border-gray-200/50">
-                  {manageFn.arguments.map((arg, argIndex) => {
-                    const label = `${arg.name} (${arg.type})`;
-                    return (
-                      <li
-                        key={argIndex}
-                        className="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6"
-                      >
-                        <div className="flex w-0 flex-1 items-center">
-                          <span className="truncate text-medium pr-2">
-                            {label}
-                          </span>
-                          <span className="text-danger">*</span>
-                        </div>
-                        <div className="flex-shrink-0 flex-1">
-                          <Input label={label} size="sm" />
-                        </div>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            </>
-          );
-        })}
+                <div className="text-sm col-span-5 mt-0">
+                  <ul className="divide-y divide-gray-100/50 rounded-md border border-gray-200/50">
+                    {fn.arguments.map((arg, argIndex) => {
+                      const label = `${arg.name} (${arg.type})`;
+                      return (
+                        <li
+                          key={argIndex}
+                          className="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6"
+                        >
+                          <div className="flex w-0 flex-1 items-center">
+                            <span className="truncate text-medium pr-2">
+                              {label}
+                            </span>
+                            <span className="text-danger">*</span>
+                          </div>
+                          <div className="flex-shrink-0 flex-1">
+                            <Input label={label} size="sm" />
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              </>
+            );
+          }
+        )}
       </div>
     );
   };
