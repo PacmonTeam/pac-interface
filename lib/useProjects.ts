@@ -45,7 +45,7 @@ export const useDeleteProject = () => {
       }
     } catch (error) {
       toast.update(tId, {
-        render: "Delete Project Fail",
+        render: "Fail to delete project",
         type: "error",
         autoClose: 8000,
         closeOnClick: true,
