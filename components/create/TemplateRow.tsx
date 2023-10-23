@@ -5,6 +5,12 @@ import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import { MdOutlineEditOff, MdOutlineModeEditOutline } from "react-icons/md";
 import { SiSolidity, SiYaml } from "react-icons/si";
 
+export type TemplateRowPropsSetScriptFunction = (
+  script: string,
+  scriptType: ScriptType,
+  id: string
+) => void;
+
 export interface TemplateRowProps {
   id: string;
   index: number;
@@ -12,7 +18,7 @@ export interface TemplateRowProps {
   contractType: ContractType;
   solidityScript: string;
   yamlConfiguration: string;
-  setScript?: (script: string, scriptType: ScriptType, id: string) => void;
+  setScript?: TemplateRowPropsSetScriptFunction;
 }
 
 export default function TemplateRow(props: TemplateRowProps) {
