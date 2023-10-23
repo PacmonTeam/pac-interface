@@ -743,6 +743,8 @@ contract PacERC20 is ERC20 {
 
 const PLACEHOLDER_YAML_ERC20 = `name: "PacERC20"
 constructor:
+  - "{{ADMIN}}"
+  - 100000000000000000000000
   - "Test PAC Token"
   - "tPAC"
   - 18
@@ -750,17 +752,21 @@ functions:
   - name: mint
     arguments:
       - "{{ADMIN}}"
-      - 100000000000000000000000
+      - 50000000000000000000000
 manage:
   functions:
     - name: mint
       arguments:
-        - address
-        - uint256
+        - name: to
+					type: address
+        - name: amount
+					type: uint256
     - name: transfer
       arguments:
-        - address
-        - uint256
+        - name: to
+					type: address
+        - name: amount
+					type: uint256
 output: "TPAC_ERC20"`;
 
 // TODO: should fetch initial code for each protocol from API
