@@ -36,3 +36,5 @@ next-env.d.ts
 
 # npm lock
 package-lock.json
+
+_static
