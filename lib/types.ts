@@ -51,3 +51,22 @@ export interface CreateProjectRequest {
 export interface CreateProjectResponse {
   // TODO: Fill in if we use or delete
 }
+
+interface TemplateResponse {
+  id: number;
+  script: string;
+  configuration: string;
+  sequence: number;
+  status: Status;
+  projectId: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ProjectResponse {
+  id: number;
+  name: string;
+  templates: Array<TemplateResponse>;
+  createdAt: Date;
+  updatedAt: Date;
+}

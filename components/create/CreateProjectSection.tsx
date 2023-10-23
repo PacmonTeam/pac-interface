@@ -23,6 +23,7 @@ import {
 } from "@/lib/types";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
+import { toText } from "@/lib/TemplateUtils";
 
 interface CreateProjectSectionProps {
   createProject: (
@@ -37,20 +38,6 @@ export default function CreateProjectSection(props: CreateProjectSectionProps) {
   const [projectName, setProjectName] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const toText = (c: ContractType) => {
-    switch (c) {
-      case ContractType.ERC_20:
-        return "ERC-20";
-      case ContractType.UNISWAP_V2:
-        return "UniswapV2";
-      case ContractType.PRICE_FEED:
-        return "PriceFeed";
-      case ContractType.CUSTOM:
-        return "Custom";
-      default:
-        return "N/A";
-    }
-  };
   const setScript = (script: string, scriptType: ScriptType, id: string) => {
     const nextTemplateRows = templateRows.map((props) => {
       if (props.id === id) {
@@ -99,7 +86,6 @@ export default function CreateProjectSection(props: CreateProjectSectionProps) {
               ></AddContractButton>
               {templateRows.length > 0 ? (
                 <Button
-                  isLoading={isLoading}
                   color="primary"
                   onClick={() => {
                     onOpen();
