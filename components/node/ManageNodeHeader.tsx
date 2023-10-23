@@ -15,7 +15,15 @@ import { NodeWithSigner } from "@/lib/types";
 
 import { SiSolidity } from "react-icons/si";
 
-export default function ManageNodeHeader({ node }: { node: NodeWithSigner }) {
+interface ManageNodeHeaderProps {
+  node: NodeWithSigner;
+  onSelectContract: (address: string) => void;
+}
+
+export default function ManageNodeHeader({
+  node,
+  onSelectContract,
+}: ManageNodeHeaderProps) {
   return (
     <>
       <div className="grid grid-cols-12 mx-auto w-full px-5 pb-6">
@@ -53,12 +61,14 @@ export default function ManageNodeHeader({ node }: { node: NodeWithSigner }) {
             </DropdownTrigger>
             <DropdownMenu
               aria-label="Deployed Contract!"
-              onAction={(key) => alert(key)}
+              onAction={(key) => {
+                onSelectContract(key.toString());
+              }}
             >
               <DropdownSection title="Contracts">
                 {node.contracts.map((contract) => (
                   <DropdownItem
-                    key={contract.id}
+                    key={contract.address}
                     description={contract.address}
                   >
                     {contract.name}
