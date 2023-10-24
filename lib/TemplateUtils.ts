@@ -20,13 +20,11 @@ export const toText = (c: ContractType) => {
 };
 
 export const getTemplateRowPropsArrayFromProject = (
-  project: ProjectResponse | undefined,
-  setScript: TemplateRowPropsSetScriptFunction
+  project: ProjectResponse | undefined
 ): TemplateRowProps[] => {
   return project
     ? project.templates
       ? project.templates.map((template, i) => {
-          // TODO: Get the contract type from configuration
           const contractType = template.type;
           return {
             key: template.id,
@@ -36,7 +34,6 @@ export const getTemplateRowPropsArrayFromProject = (
             contractType: contractType,
             solidityScript: template.script,
             yamlConfiguration: template.configuration,
-            setScript: setScript,
           };
         })
       : []

@@ -5,7 +5,7 @@ import { ScriptType } from "@/lib/types";
 import { useProject } from "@/lib/useProjects";
 import { Button } from "@nextui-org/react";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AiOutlineSave } from "react-icons/ai";
 
 export default function Page() {
@@ -13,34 +13,30 @@ export default function Page() {
   const projectId: number = parseInt(router.query.id?.toString() || "0");
   const { data: project } = useProject(projectId);
 
-  // TOFIX: Fix the bug that update would replace template rows with empty array
+  const [isLoaded, setIsLoaded] = useState(false);
   const [templateRowProps, setTemplateRowProps] = useState<TemplateRowProps[]>(
     []
   );
 
-  useEffect(() => {
-    setTemplateRowProps((t) =>
-      getTemplateRowPropsArrayFromProject(
-        project,
-        (script: string, scriptType: ScriptType, id: string) => {
-          console.log("setScript()", t);
-          const nextTemplateRowProps = t.map((props) => {
-            if (props.id === id) {
-              switch (scriptType) {
-                case ScriptType.SOLIDITY:
-                  return { ...props, solidityScript: script };
-                case ScriptType.YAML:
-                  return { ...props, yamlConfiguration: script };
-              }
-            }
-            return props;
-          });
-          console.log(nextTemplateRowProps);
-          setTemplateRowProps(nextTemplateRowProps);
+  if (!isLoaded && project && project.templates) {
+    setTemplateRowProps(getTemplateRowPropsArrayFromProject(project));
+    setIsLoaded(true);
+  }
+
+  const setScript = (script: string, scriptType: ScriptType, id: string) => {
+    const nextTemplateRowProps = templateRowProps.map((props) => {
+      if (props.id === id) {
+        switch (scriptType) {
+          case ScriptType.SOLIDITY:
+            return { ...props, solidityScript: script };
+          case ScriptType.YAML:
+            return { ...props, yamlConfiguration: script };
         }
-      )
-    );
-  }, [project]);
+      }
+      return props;
+    });
+    setTemplateRowProps(nextTemplateRowProps);
+  };
 
   const deleteTemplateRowProps = (id: string) => {
     const nextTemplateRowProps = templateRowProps.filter(
@@ -86,7 +82,7 @@ export default function Page() {
               contractType={props.contractType}
               solidityScript={props.solidityScript}
               yamlConfiguration={props.yamlConfiguration}
-              setScript={props.setScript}
+              setScript={setScript}
               deleteTemplate={deleteTemplateRowProps}
             />
           );
