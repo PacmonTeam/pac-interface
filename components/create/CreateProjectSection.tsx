@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import AddContractButton from "./AddContractButton";
-import { ContractType, ScriptType } from "@/utils";
 import TemplateRow, { TemplateRowProps } from "@/components/create/TemplateRow";
 import { getPlaceholderTemplateCode } from "@/components/create/CodePlaceholder";
 import {
@@ -17,8 +16,10 @@ import {
 } from "@nextui-org/react";
 import { BsCloudUploadFill } from "react-icons/bs";
 import {
+  ContractType,
   CreateProjectRequest,
   CreateProjectResponse,
+  ScriptType,
   Status,
 } from "@/lib/types";
 import { useRouter } from "next/router";
@@ -158,6 +159,7 @@ export default function CreateProjectSection(props: CreateProjectSectionProps) {
                             configuration: template.yamlConfiguration,
                             sequence: i,
                             status: Status.ACTIVE,
+                            // TODO: Include 'type' in the create request
                           };
                         }),
                       };

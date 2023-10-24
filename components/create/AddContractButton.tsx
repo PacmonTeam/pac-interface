@@ -17,7 +17,7 @@ export default function AddContractButton({ onClick }: AddContractButtonProps) {
     { key: ContractType.ERC_20, text: "ERC-20" },
     { key: ContractType.UNISWAP_V2, text: "UniswapV2" },
     { key: ContractType.PRICE_FEED, text: "PriceFeed" },
-    { key: ContractType.CUSTOM, text: "Custom" },
+    { key: ContractType.CUSTOM, text: "custom" },
   ];
   return (
     <div>

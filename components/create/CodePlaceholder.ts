@@ -1,4 +1,4 @@
-import { ContractType, ScriptType } from "@/utils";
+import { ScriptType, ContractType } from "@/lib/types";
 
 const solidityPlaceholder = `// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
@@ -767,7 +767,7 @@ output: "TPAC_ERC20"`;
 export const getPlaceholderTemplateCode = (
   scriptType: ScriptType,
   contractType: ContractType
-) => {
+): string => {
   switch (scriptType) {
     case ScriptType.SOLIDITY:
       switch (contractType) {
@@ -788,4 +788,5 @@ export const getPlaceholderTemplateCode = (
           return PLACEHOLDER_YAML_ERC20;
       }
   }
+  return "";
 };

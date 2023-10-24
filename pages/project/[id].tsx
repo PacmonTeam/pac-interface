@@ -59,6 +59,7 @@ export default function Page() {
                 <Button
                   color="primary"
                   onClick={() => {
+                    // TODO: open modal and call update project
                     // onOpen();
                     return;
                   }}
