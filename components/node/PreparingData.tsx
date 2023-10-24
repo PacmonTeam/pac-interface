@@ -9,7 +9,7 @@ interface PreparingDataProps {
 
 const renderIcon = (loading: boolean) => {
   if (loading) {
-    return <Spinner color="default" size="sm" />;
+    return <Spinner color="warning" size="sm" />;
   }
   return <BsFillPatchCheckFill className="text-success" />;
 };
@@ -20,18 +20,32 @@ export default function PreparingData({
   isCompiling,
 }: PreparingDataProps) {
   return (
-    <div className="w-full gap-14">
-      <div className="flex flex-row items-center gap-2 text-default-500">
-        <div className="items-center">{renderIcon(true)}</div>
-        <div className="items-center">Fetching Project</div>
-      </div>
-      <div className="flex flex-row items-center gap-2 text-default-500">
-        <div className="items-center">{renderIcon(isPluginsLoading)}</div>
-        <div className="items-center">Fetching Plugins</div>
-      </div>
-      <div className="flex flex-row items-center gap-2 text-default-500">
-        <div className="items-center">{renderIcon(isCompiling)}</div>
-        <div className="items-center">Compiling Plugins</div>
+    <div className="w-full h-auto m-auto flex justify-center items-center my-32">
+      <div className="flex gap-2 flex-col w-52">
+        <div className="flex flex-row items-center gap-2 text-default-500">
+          <div className="items-center justify-center w-5">
+            {renderIcon(isProjectLoading)}
+          </div>
+          <div className="items-center">
+            Fetching <span className="font-bold">Project</span>
+          </div>
+        </div>
+        <div className="flex flex-row items-center gap-2 text-default-500">
+          <div className="items-center justify-center w-5">
+            {renderIcon(isPluginsLoading)}
+          </div>
+          <div className="items-center">
+            Fetching <span className="font-bold">Plugins</span>
+          </div>
+        </div>
+        <div className="flex flex-row items-center gap-2 text-default-500">
+          <div className="items-center justify-center w-5">
+            {renderIcon(isCompiling)}
+          </div>
+          <div className="items-center">
+            Compiling <span className="font-bold">Plugins</span>
+          </div>
+        </div>
       </div>
     </div>
   );

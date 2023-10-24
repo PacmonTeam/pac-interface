@@ -73,7 +73,7 @@ export default function Page() {
 
   console.log("compiledData =:", compiledData, compileError);
 
-  if (true) {
+  if (!node || isLoading || isCompiling) {
     return (
       <PreparingData
         isPluginsLoading={isLoading}
@@ -133,51 +133,65 @@ export default function Page() {
       return;
     }
     const selectedContract = convertedContract[selectedContractAddress];
+    const manage = selectedContract.configurationJson.manage;
+
+    if (!manage || manage?.functions.length === 0) {
+      return (
+        <div className="rounded-lg mt-8 border border-dashed border-neutral-50/50 bg-transparent p-4">
+          <div className="w-full text-default-500/80">
+            <div className="flex justify-center items-center">
+              <TbFaceIdError size="50" />
+            </div>
+            <div className="flex justify-center items-center text-xs font-bold">
+              Manageable function not found
+            </div>
+          </div>
+        </div>
+      );
+    }
 
     return (
       <div className="mt-8 grid grid-cols-6 gap-6 px-0">
-        {selectedContract.configurationJson.manage?.functions.map(
-          (fn: FunctionOnConfiguration, index: number) => {
-            return (
-              <>
-                <div key={index} className="text-sm font-extralight leading-6">
-                  <>
-                    <span className="text-default-500 pr-2">{index + 1}.</span>
-                    <span className="font-medium">{fn.name}</span>
-                  </>
-                  <div className="mt-2">
-                    <Button size="sm" startContent={<TfiWrite />}>
-                      Call
-                    </Button>
-                  </div>
+        {manage?.functions.map((fn: FunctionOnConfiguration, index: number) => {
+          return (
+            <>
+              <div key={index} className="text-sm font-extralight leading-6">
+                <>
+                  <span className="text-default-500 pr-2">{index + 1}.</span>
+                  <span className="font-medium">{fn.name}</span>
+                </>
+                <div className="mt-2">
+                  <Button size="sm" startContent={<TfiWrite />}>
+                    Call
+                  </Button>
                 </div>
-                <div className="text-sm col-span-5 mt-0">
-                  <ul className="divide-y divide-gray-100/50 rounded-md border border-gray-200/50">
-                    {fn.arguments.map((arg, argIndex) => {
-                      const label = `${arg.name} (${arg.type})`;
-                      return (
-                        <li
-                          key={argIndex}
-                          className="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6"
-                        >
-                          <div className="flex w-0 flex-1 items-center">
-                            <span className="truncate text-medium pr-2">
-                              {label}
-                            </span>
-                            <span className="text-danger">*</span>
-                          </div>
-                          <div className="flex-shrink-0 flex-1">
-                            <Input label={label} size="sm" />
-                          </div>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-              </>
-            );
-          }
-        )}
+              </div>
+              <div className="text-sm col-span-5 mt-0">
+                <ul className="divide-y divide-gray-100/50 rounded-md border border-gray-200/50">
+                  {fn.arguments.map((arg, argIndex) => {
+                    const label = `${arg.name} (${arg.type})`;
+                    return (
+                      <li
+                        key={argIndex}
+                        className="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6"
+                      >
+                        <div className="flex w-0 flex-1 items-center">
+                          <span className="truncate text-medium pr-2">
+                            {label}
+                          </span>
+                          <span className="text-danger">*</span>
+                        </div>
+                        <div className="flex-shrink-0 flex-1">
+                          <Input label={label} size="sm" />
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            </>
+          );
+        })}
       </div>
     );
   };
