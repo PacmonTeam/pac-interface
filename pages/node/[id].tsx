@@ -1,14 +1,20 @@
 import { Spinner, Snippet, Input, Button } from "@nextui-org/react";
 import { useRouter } from "next/router";
 
-import { useManageNode } from "@/lib/useManageNode";
-import { Contract, FunctionOnConfiguration, NodeWithSigner } from "@/lib/types";
+import { useManageNode, useCompileContracts } from "@/lib/useManageNode";
+import {
+  Contract,
+  FunctionOnConfiguration,
+  ICompileContractInput,
+  NodeWithSigner,
+} from "@/lib/types";
 import ManageNodeHeader from "@/components/node/ManageNodeHeader";
 import { convertYAMLStringToJson } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { TbFaceIdError } from "react-icons/tb";
 import { TfiWrite } from "react-icons/tfi";
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
+import PreparingData from "@/components/node/PreparingData";
 
 interface ContractWithConverted extends Contract {
   configurationJson: { [key: string]: any };
@@ -23,6 +29,12 @@ export default function Page() {
   const nodeId = router.query.id;
   const { data: node, isLoading } = useManageNode<NodeWithSigner>(nodeId);
   const [convertedContract, setConvertedContract] = useState<ContractList>();
+  const {
+    compile,
+    data: compiledData,
+    error: compileError,
+    compiling: isCompiling,
+  } = useCompileContracts();
   const [selectedContractAddress, setSelectedContractAddress] =
     useState<string>("");
 
@@ -45,10 +57,31 @@ export default function Page() {
     }
   }, [node, selectedContractAddress]);
 
-  if (isLoading || !node) {
-    return <Spinner color="default" />;
-  }
+  useEffect(() => {
+    (async () => {
+      if (node) {
+        const convertedNodeByName =
+          node.contracts.reduce<ICompileContractInput>((prev, contract) => {
+            prev[contract.name] = contract.script;
+            return prev;
+          }, {});
+        console.log("compiling ...");
+        await compile(convertedNodeByName);
+      }
+    })();
+  }, [node]);
 
+  console.log("compiledData =:", compiledData, compileError);
+
+  if (true) {
+    return (
+      <PreparingData
+        isPluginsLoading={isLoading}
+        isProjectLoading={!node}
+        isCompiling={isCompiling}
+      />
+    );
+  }
   const renderContractContent = () => {
     // if (!selectedContractAddress) {
     //   return <Spinner color="default" />;
@@ -69,7 +102,6 @@ export default function Page() {
       );
     }
     const selectedContract = convertedContract[selectedContractAddress];
-    console.log("selectedContract =:", selectedContract);
 
     return (
       <div className="flex items-center w-full justify-between mt-6">

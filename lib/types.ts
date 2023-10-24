@@ -1,3 +1,4 @@
+import { ethers } from "ethers";
 // TODO: merge with status below
 enum STATUS {
   ACTIVE,
@@ -88,4 +89,27 @@ export interface CreateProjectRequest {
 
 export interface CreateProjectResponse {
   // TODO: Fill in if we use or delete
+}
+
+export interface ICompileContractInput {
+  [name: string]: string;
+}
+
+export interface ICompileSource {
+  [name: string]: {
+    content: string;
+  };
+}
+
+export interface ICompileOutputSelection {
+  [name: string]: {
+    [contractName: string]: string[];
+  };
+}
+
+export interface ICompileContractOutput {
+  [name: string]: {
+    bytecode: string;
+    contractFactory: ethers.ContractFactory;
+  };
 }

@@ -38,16 +38,16 @@ export default function ManageNodeHeader({
               <ActiveStatus />
             </div>
           </div>
-          <div className="flex mt-0 flex-row flex-wrap space-x-4">
-            <div className="mt-2 flex items-center text-sm">
+          <div className="flex mt-2 flex-row space-x-2">
+            <div className="flex items-center text-sm">
               <Snippet className="w-full" size="sm">
                 {node.rpc}
               </Snippet>
             </div>
-            <div className="mt-2 flex items-center text-sm font-medium text-default-600">
+            <div className="flex pl-2 items-center text-sm font-medium text-default-600">
               {node.project.name}
             </div>
-            <div className="mt-2 flex items-center text-xs text-gray-500">
+            <div className="flex items-center text-xs text-gray-500">
               Created on {formatDate(node.createdAt)}
             </div>
           </div>
