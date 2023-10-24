@@ -105,13 +105,15 @@ export const useDeployProject = () => {
 
 export const useProject = (id: number | undefined) => {
   const fetcher = (url: string): Promise<ProjectResponse> => {
-    // if (projectId === undefined || id === 0) return Promise.reject("id is undefined or zero")
-    return fetch(url).then((r) => r.json())
+    return fetch(url).then((r) => r.json());
   };
-  const { data, error, isLoading } = useSwr(`${BASE_API}/projects/${id}`, fetcher);
+  const { data, error, isLoading } = useSwr(
+    `${BASE_API}/projects/${id}`,
+    fetcher
+  );
 
   if (error) {
     console.error(error);
   }
-  return { data, error, isLoading }
-}
+  return { data, error, isLoading };
+};

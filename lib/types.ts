@@ -4,6 +4,18 @@ enum STATUS {
   INACTIVE,
 }
 
+export enum ContractType {
+  ERC_20,
+  UNISWAP_V2,
+  PRICE_FEED,
+  CUSTOM,
+}
+
+export enum ScriptType {
+  SOLIDITY,
+  YAML,
+}
+
 export interface Template {
   id: number;
   script: string;
@@ -56,6 +68,7 @@ interface TemplateResponse {
   id: number;
   script: string;
   configuration: string;
+  type: string;
   sequence: number;
   status: Status;
   projectId: number;

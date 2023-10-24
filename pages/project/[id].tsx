@@ -1,8 +1,8 @@
 import AddContractButton from "@/components/create/AddContractButton";
 import TemplateRow, { TemplateRowProps } from "@/components/create/TemplateRow";
 import { getTemplateRowPropsArrayFromProject } from "@/lib/TemplateUtils";
+import { ScriptType } from "@/lib/types";
 import { useProject } from "@/lib/useProjects";
-import { ScriptType } from "@/utils";
 import { Button } from "@nextui-org/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -13,6 +13,7 @@ export default function Page() {
   const projectId: number = parseInt(router.query.id?.toString() || "0");
   const { data: project } = useProject(projectId);
 
+  // TOFIX: Fix the bug that update would replace template rows with empty array
   const [templateRowProps, setTemplateRowProps] = useState<TemplateRowProps[]>(
     []
   );
@@ -22,6 +23,7 @@ export default function Page() {
       getTemplateRowPropsArrayFromProject(
         project,
         (script: string, scriptType: ScriptType, id: string) => {
+          console.log("setScript()", t);
           const nextTemplateRowProps = t.map((props) => {
             if (props.id === id) {
               switch (scriptType) {
@@ -33,6 +35,7 @@ export default function Page() {
             }
             return props;
           });
+          console.log(nextTemplateRowProps);
           setTemplateRowProps(nextTemplateRowProps);
         }
       )

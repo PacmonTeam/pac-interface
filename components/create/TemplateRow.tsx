@@ -1,10 +1,10 @@
 import CodeMirror from "@uiw/react-codemirror";
 import { langs } from "@uiw/codemirror-extensions-langs";
-import { ContractType, ScriptType } from "@/utils";
 import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import { MdOutlineEditOff, MdOutlineModeEditOutline } from "react-icons/md";
 import { SiSolidity, SiYaml } from "react-icons/si";
 import { Button } from "@nextui-org/react";
+import { ContractType, ScriptType } from "@/lib/types";
 
 export type TemplateRowPropsSetScriptFunction = (
   script: string,

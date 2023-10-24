@@ -1,4 +1,4 @@
-import { ContractType } from "@/utils";
+import { ContractType } from "@/lib/types";
 import { Button } from "@nextui-org/button";
 import {
   Dropdown,
