@@ -5,10 +5,10 @@ enum STATUS {
 }
 
 export enum ContractType {
-  ERC_20,
-  UNISWAP_V2,
-  PRICE_FEED,
-  CUSTOM,
+  ERC_20 = "ERC-20",
+  UNISWAP_V2 = "UniswapV2",
+  PRICE_FEED = "PriceFeed",
+  CUSTOM = "custom",
 }
 
 export enum ScriptType {
@@ -68,7 +68,7 @@ interface TemplateResponse {
   id: number;
   script: string;
   configuration: string;
-  type: string;
+  type: ContractType;
   sequence: number;
   status: Status;
   projectId: number;

@@ -27,7 +27,7 @@ export const getTemplateRowPropsArrayFromProject = (
     ? project.templates
       ? project.templates.map((template, i) => {
           // TODO: Get the contract type from configuration
-          const contractType = ContractType.ERC_20;
+          const contractType = template.type;
           return {
             key: template.id,
             id: `${toText(contractType)}-${i}`,

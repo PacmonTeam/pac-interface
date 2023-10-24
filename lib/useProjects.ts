@@ -104,6 +104,7 @@ export const useDeployProject = () => {
 };
 
 export const useProject = (id: number | undefined) => {
+  // TOFIX: prevent the first call when id = 0 or undefined
   const fetcher = (url: string): Promise<ProjectResponse> => {
     return fetch(url).then((r) => r.json());
   };
