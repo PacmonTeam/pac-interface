@@ -1,7 +1,11 @@
 import AddContractButton from "@/components/create/AddContractButton";
+import { getPlaceholderTemplateCode } from "@/components/create/CodePlaceholder";
 import TemplateRow, { TemplateRowProps } from "@/components/create/TemplateRow";
-import { getTemplateRowPropsArrayFromProject } from "@/lib/TemplateUtils";
-import { ScriptType } from "@/lib/types";
+import {
+  getTemplateRowPropsArrayFromProject,
+  toText,
+} from "@/lib/TemplateUtils";
+import { ContractType, ScriptType } from "@/lib/types";
 import { useProject } from "@/lib/useProjects";
 import { Button } from "@nextui-org/react";
 import { useRouter } from "next/router";
@@ -45,6 +49,27 @@ export default function Page() {
     setTemplateRowProps(nextTemplateRowProps);
   };
 
+  const onClickAddContract = (contractType: ContractType) => {
+    setTemplateRowProps([
+      ...templateRowProps,
+      {
+        id: `${toText(contractType)}-${templateRowProps.length}`,
+        index: templateRowProps.length,
+        text: toText(contractType),
+        contractType: contractType,
+        solidityScript: getPlaceholderTemplateCode(
+          ScriptType.SOLIDITY,
+          contractType
+        ),
+        yamlConfiguration: getPlaceholderTemplateCode(
+          ScriptType.YAML,
+          contractType
+        ),
+        setScript: setScript,
+      },
+    ]);
+  };
+
   return (
     <div className="container flex flex-col items-center">
       <div className="container max-w-[1024px] gap-4 relative">
@@ -54,7 +79,9 @@ export default function Page() {
           </h1>
           <div className="flex flex-row">
             <div className="flex flex-row gap-2">
-              <AddContractButton onClick={() => {}}></AddContractButton>
+              <AddContractButton
+                onClick={onClickAddContract}
+              ></AddContractButton>
               {templateRowProps.length > 0 ? (
                 <Button
                   color="primary"
