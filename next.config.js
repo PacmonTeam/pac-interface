@@ -5,6 +5,7 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  transpilePackages: ["web3-eth-abi"],
 };
 
 module.exports = nextConfig;

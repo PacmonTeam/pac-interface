@@ -39,6 +39,7 @@ export const useCompileContracts = () => {
     const worker = new Worker(new URL("./worker/worker.ts", import.meta.url), {
       type: "module",
     });
+    console.log("contracts =:", contracts);
     const sources = _.reduce(
       contracts,
       (prev, code, name) => {
@@ -67,6 +68,7 @@ export const useCompileContracts = () => {
         outputSelection,
       },
     };
+    console.log("input =:", input);
 
     worker.postMessage({ input });
     worker.onerror = (e: any) => {
@@ -84,11 +86,12 @@ export const useCompileContracts = () => {
       const out = _.reduce(
         contracts,
         (prev, code, name) => {
-          const bytecode = output.contracts[name][name].evm.bytecode.object;
+          const contracts = output.contracts;
+          const bytecode = contracts[name][name].evm.bytecode.object;
           prev[name] = {
             bytecode,
             contractFactory: ethers.ContractFactory.fromSolidity(
-              output.contracts[name][name]
+              contracts[name][name]
             ),
           };
           return prev;

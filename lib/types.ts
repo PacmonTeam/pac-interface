@@ -50,9 +50,9 @@ export interface NodeWithSigner extends Node {
   signers: { address: string; privateKey: string }[];
 }
 
-enum ArgumentType {
-  address,
-  uint256,
+export enum ArgumentType {
+  address = "address",
+  uint256 = "uint256",
 }
 
 export interface FunctionArgument {

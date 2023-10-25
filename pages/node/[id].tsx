@@ -1,4 +1,4 @@
-import { Spinner, Snippet, Input, Button } from "@nextui-org/react";
+import { Snippet } from "@nextui-org/react";
 import { useRouter } from "next/router";
 
 import { useManageNode, useCompileContracts } from "@/lib/useManageNode";
@@ -12,9 +12,10 @@ import ManageNodeHeader from "@/components/node/ManageNodeHeader";
 import { convertYAMLStringToJson } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { TbFaceIdError } from "react-icons/tb";
-import { TfiWrite } from "react-icons/tfi";
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 import PreparingData from "@/components/node/PreparingData";
+import FunctionPanel from "@/components/node/FunctionPanel";
+import { useCallContract } from "@/lib/contract/useCallContract";
 
 interface ContractWithConverted extends Contract {
   configurationJson: { [key: string]: any };
@@ -37,6 +38,7 @@ export default function Page() {
   } = useCompileContracts();
   const [selectedContractAddress, setSelectedContractAddress] =
     useState<string>("");
+  const [callContract] = useCallContract();
 
   useEffect(() => {
     if (!selectedContractAddress && node) {
@@ -78,7 +80,7 @@ export default function Page() {
       <PreparingData
         isPluginsLoading={isLoading}
         isProjectLoading={!node}
-        isCompiling={isCompiling}
+        isCompiling={isCompiling || !compiledData}
       />
     );
   }
@@ -151,45 +153,25 @@ export default function Page() {
     }
 
     return (
-      <div className="mt-8 grid grid-cols-6 gap-6 px-0">
+      <div className="mt-8 px-0">
         {manage?.functions.map((fn: FunctionOnConfiguration, index: number) => {
           return (
-            <>
-              <div key={index} className="text-sm font-extralight leading-6">
-                <>
-                  <span className="text-default-500 pr-2">{index + 1}.</span>
-                  <span className="font-medium">{fn.name}</span>
-                </>
-                <div className="mt-2">
-                  <Button size="sm" startContent={<TfiWrite />}>
-                    Call
-                  </Button>
-                </div>
-              </div>
-              <div className="text-sm col-span-5 mt-0">
-                <ul className="divide-y divide-gray-100/50 rounded-md border border-gray-200/50">
-                  {fn.arguments.map((arg, argIndex) => {
-                    const label = `${arg.name} (${arg.type})`;
-                    return (
-                      <li
-                        key={argIndex}
-                        className="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6"
-                      >
-                        <div className="flex w-0 flex-1 items-center">
-                          <span className="truncate text-medium pr-2">
-                            {label}
-                          </span>
-                          <span className="text-danger">*</span>
-                        </div>
-                        <div className="flex-shrink-0 flex-1">
-                          <Input label={label} size="sm" />
-                        </div>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            </>
+            <FunctionPanel
+              no={index + 1}
+              fn={fn}
+              key={index}
+              onCall={async (...args) => {
+                if (compiledData) {
+                  await callContract(
+                    compiledData,
+                    selectedContract,
+                    fn,
+                    node,
+                    node.signers[0].address
+                  )(...args);
+                }
+              }}
+            />
           );
         })}
       </div>
