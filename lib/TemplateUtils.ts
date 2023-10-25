@@ -1,17 +1,15 @@
 import { ContractType, ProjectResponse } from "./types";
-import {
-  TemplateRowProps,
-  TemplateRowPropsSetScriptFunction,
-} from "@/components/create/TemplateRow";
+import { TemplateRowProps } from "@/components/create/TemplateRow";
 
+// TODO: Might not need this anymore since enum has the same display text value
 export const toText = (c: ContractType) => {
   switch (c) {
     case ContractType.ERC_20:
-      return "ERC-20";
+      return "ERC-20 Token";
     case ContractType.UNISWAP_V2:
-      return "UniswapV2";
+      return "Uniswap V2 Pair";
     case ContractType.PRICE_FEED:
-      return "PriceFeed";
+      return "Uniswap V2 Pair";
     case ContractType.CUSTOM:
       return "Custom";
     default:

@@ -5,9 +5,9 @@ enum STATUS {
 }
 
 export enum ContractType {
-  ERC_20 = "ERC-20",
-  UNISWAP_V2 = "UniswapV2",
-  PRICE_FEED = "PriceFeed",
+  ERC_20 = "ERC-20 Token",
+  UNISWAP_V2 = "Uniswap V2 Pair",
+  PRICE_FEED = "Price Feed",
   CUSTOM = "custom",
 }
 
