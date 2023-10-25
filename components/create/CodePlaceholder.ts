@@ -701,30 +701,35 @@ abstract contract ERC20 is Context, IERC20, IERC20Metadata, IERC20Errors {
     }
 }
 
+// File contracts/interfaces/IPacERC20.sol
+
+// Original license: SPDX_License_Identifier: MIT
+
+pragma solidity >=0.5.0;
+
+interface IPacERC20 {
+    event Mint(address indexed to, uint value);
+    event Burn(address indexed from, uint value);
+
+    function mint(address to, uint256 value) external returns (bool);
+
+    function burn(uint256 value) external returns (bool);
+}
+
 // File contracts/PacERC20.sol
 
 // Original license: SPDX_License_Identifier: UNLICENSED
 
 pragma solidity =0.8.20;
 
-contract PacERC20 is ERC20 {
+contract PacERC20 is ERC20, IPacERC20 {
     uint8 private immutable __decimals;
-    address public admin;
-
-    modifier onlyAdmin() {
-        require(msg.sender == admin, "PacERC20: only admin");
-        _;
-    }
 
     constructor(
-        address _to,
-        uint256 _totalSupply,
         string memory _name,
         string memory _symbol,
         uint8 _decimals
     ) ERC20(_name, _symbol) {
-        _mint(_to, _totalSupply);
-        admin = msg.sender;
         __decimals = _decimals;
     }
 
@@ -732,16 +737,20 @@ contract PacERC20 is ERC20 {
         return __decimals;
     }
 
-    function setAdmin(address _admin) external onlyAdmin {
-        admin = _admin;
+    function mint(address _to, uint256 _amount) external returns (bool) {
+        _mint(_to, _amount);
+        emit Mint(_to, _amount);
+        return true;
     }
 
-    function mint(address _to, uint256 _amount) external onlyAdmin {
-        _mint(_to, _amount);
+    function burn(uint256 _amount) external returns (bool) {
+        _burn(msg.sender, _amount);
+        emit Burn(msg.sender, _amount);
+        return true;
     }
 }`;
 
-const PLACEHOLDER_YAML_ERC20 = `name: "PacERC20"
+const PLACEHOLDER_YAML_ERC20 = `contractName: "PacERC20"
 constructor:
   - "Test PAC Token"
   - "tPAC"
@@ -761,7 +770,7 @@ manage:
       arguments:
         - address
         - uint256
-output: "TPAC_ERC20"`;
+output: "ERC20"`;
 
 // TODO: should fetch initial code for each protocol from API
 export const getPlaceholderTemplateCode = (
