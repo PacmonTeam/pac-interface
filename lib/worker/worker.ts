@@ -12,9 +12,7 @@ self.onmessage = (e) => {
   const compiler = wrapper((self as any).Module);
   console.log(`Solc version: ${compiler.version()}`);
 
-  console.log("Input =:", JSON.stringify(input));
   const compiled = compiler.compile(JSON.stringify(input));
-  console.log("Output =:", compiled);
   self.postMessage({
     output: JSON.parse(compiled),
   });

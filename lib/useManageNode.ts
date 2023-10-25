@@ -32,14 +32,13 @@ export const useManageNode = <T = Node>(nodeId: any) => {
 export const useCompileContracts = () => {
   const [data, setData] = useState<ICompileContractOutput>();
   const [error, setError] = useState<string>();
-  const [compiling, setCompiling] = useState<boolean>(false);
+  const [compiling, setCompiling] = useState<boolean>(true);
 
   const compile = async (contracts: ICompileContractInput) => {
     setCompiling(true);
     const worker = new Worker(new URL("./worker/worker.ts", import.meta.url), {
       type: "module",
     });
-    console.log("contracts =:", contracts);
     const sources = _.reduce(
       contracts,
       (prev, code, name) => {
@@ -68,7 +67,6 @@ export const useCompileContracts = () => {
         outputSelection,
       },
     };
-    console.log("input =:", input);
 
     worker.postMessage({ input });
     worker.onerror = (e: any) => {

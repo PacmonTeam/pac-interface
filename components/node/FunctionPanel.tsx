@@ -36,10 +36,19 @@ const validator = (type: ArgumentType, value: string): boolean => {
 };
 
 function ArgumentInput({ arg, onChange }: ArgumentInputProps) {
-  // TODO: validate type on input : address, uint256
   const [value, setValue] = useState<string>();
   const [isInvalid, setIsInvalid] = useState<boolean>(false);
   const label = `${arg.name} (${arg.type})`;
+
+  const onValueChange = (value: string) => {
+    const isValid = validator(arg.type, value);
+    setIsInvalid(!isValid);
+    setValue(value);
+    if (onChange) {
+      onChange(value);
+    }
+  };
+
   return (
     <li className="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6">
       <div className="flex w-0 flex-1 items-center">
@@ -53,14 +62,7 @@ function ArgumentInput({ arg, onChange }: ArgumentInputProps) {
           value={value || ""}
           isInvalid={isInvalid}
           errorMessage={isInvalid && `invalid argument type (${arg.type})`}
-          onValueChange={(value) => {
-            const isValid = validator(arg.type, value);
-            setIsInvalid(!isValid);
-            setValue(value);
-            if (onChange) {
-              onChange(value);
-            }
-          }}
+          onValueChange={onValueChange}
         />
       </div>
     </li>

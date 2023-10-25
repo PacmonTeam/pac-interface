@@ -47,6 +47,7 @@ export default function Page() {
     if (node) {
       const convertedNode = node.contracts.reduce<ContractList>(
         (prev, contract) => {
+          console.log("contract.configuration =:", contract.configuration);
           prev[contract.address] = {
             configurationJson: convertYAMLStringToJson(contract.configuration),
             ...contract,
@@ -57,23 +58,22 @@ export default function Page() {
       );
       setConvertedContract(convertedNode);
     }
-  }, [node, selectedContractAddress]);
+  }, [node]);
 
   useEffect(() => {
     (async () => {
-      if (node) {
-        const convertedNodeByName =
-          node.contracts.reduce<ICompileContractInput>((prev, contract) => {
-            prev[contract.name] = contract.script;
-            return prev;
-          }, {});
-        console.log("compiling ...");
-        await compile(convertedNodeByName);
+      if (convertedContract) {
+        const convertedNodeByContractName = Object.keys(
+          convertedContract
+        ).reduce<ICompileContractInput>((prev, key) => {
+          const cotract = convertedContract[key];
+          prev[cotract.configurationJson.contractName] = cotract.script;
+          return prev;
+        }, {});
+        await compile(convertedNodeByContractName);
       }
     })();
-  }, [node]);
-
-  console.log("compiledData =:", compiledData, compileError);
+  }, [convertedContract]);
 
   if (!node || isLoading || isCompiling) {
     return (
@@ -85,10 +85,6 @@ export default function Page() {
     );
   }
   const renderContractContent = () => {
-    // if (!selectedContractAddress) {
-    //   return <Spinner color="default" />;
-    // }
-
     if (!convertedContract || node.contracts?.length === 0) {
       return (
         <div className="rounded-lg border border-dashed border-neutral-50/50 bg-transparent p-4">
@@ -153,7 +149,7 @@ export default function Page() {
     }
 
     return (
-      <div className="mt-8 px-0">
+      <div className="mt-8 px-0 gap-2 flex flex-col">
         {manage?.functions.map((fn: FunctionOnConfiguration, index: number) => {
           return (
             <FunctionPanel
