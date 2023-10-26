@@ -39,11 +39,6 @@ export default function Page() {
     }).then((response) => response.json());
   }
 
-  if (!isLoaded && project && project.templates) {
-    setTemplateRowProps(getTemplateRowPropsArrayFromProject(project));
-    setIsLoaded(true);
-  }
-
   const setScript = (script: string, scriptType: ScriptType, id: string) => {
     const nextTemplateRowProps = templateRowProps.map((props) => {
       if (props.id === id) {
@@ -135,7 +130,14 @@ export default function Page() {
     onClose();
   };
 
-  if (!isLoaded) return null;
+  // Initialization
+  if (!isLoaded) {
+    if (project && project.templates) {
+      setTemplateRowProps(getTemplateRowPropsArrayFromProject(project));
+      setIsLoaded(true);
+    }
+    return null;
+  }
 
   return (
     <div className="container flex flex-col items-center">
