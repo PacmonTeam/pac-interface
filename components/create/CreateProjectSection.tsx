@@ -25,6 +25,7 @@ import {
 } from "@/lib/types";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
+import SaveProjectModal from "../project/SaveProjectModal";
 
 interface CreateProjectSectionProps {
   createProject: (
@@ -82,6 +83,50 @@ export default function CreateProjectSection(props: CreateProjectSectionProps) {
       },
     ]);
   };
+
+  const onCreateProjectClick = async (projectName: string) => {
+    setIsLoading(true);
+    const tId = toast.loading(`Creating project "${projectName}"`);
+    const request: CreateProjectRequest = {
+      name: projectName,
+      templates: templateRows.map((template, i) => {
+        return {
+          displayName: template.id,
+          script: template.solidityScript,
+          configuration: template.yamlConfiguration,
+          sequence: i,
+          status: Status.ACTIVE,
+          type: template.contractType,
+        };
+      }),
+    };
+    await props
+      .createProject(request)
+      .then(() => {
+        setIsLoading(false);
+        toast.update(tId, {
+          render: `Project "${projectName}" was created!`,
+          type: "success",
+          icon: "🌈",
+          autoClose: 5000,
+          closeOnClick: true,
+          isLoading: false,
+        });
+        router.push("/project");
+      })
+      .catch((reason) => {
+        console.error(reason);
+        toast.update(tId, {
+          render: "Fail to create project",
+          type: "error",
+          autoClose: 5000,
+          closeOnClick: true,
+          isLoading: false,
+        });
+      });
+    onClose();
+  };
+
   return (
     <div className="container flex flex-col items-center">
       <div className="container max-w-[1024px] gap-4 relative">
@@ -124,85 +169,12 @@ export default function CreateProjectSection(props: CreateProjectSectionProps) {
             />
           );
         })}
-        <Modal size="sm" isOpen={isOpen} onClose={onClose}>
-          <ModalContent>
-            {(onClose) => (
-              <>
-                <ModalHeader className="flex flex-col gap-1">
-                  Project name
-                </ModalHeader>
-                <ModalBody>
-                  <Textarea
-                    minRows={1}
-                    placeholder="Enter your project name"
-                    className="max-w-sm"
-                    onValueChange={(value) => {
-                      setProjectName(value);
-                    }}
-                  />
-                </ModalBody>
-                <ModalFooter>
-                  <Button color="danger" variant="light" onPress={onClose}>
-                    Close
-                  </Button>
-                  <Button
-                    color="primary"
-                    onPress={() => {
-                      if (projectName === "") return;
-                      setIsLoading(true);
-                      const tId = toast.loading(
-                        `Creating project "${projectName}"`
-                      );
-                      // prepare request body
-                      const request: CreateProjectRequest = {
-                        name: projectName,
-                        templates: templateRows.map((template, i) => {
-                          return {
-                            displayName: template.id,
-                            script: template.solidityScript,
-                            configuration: template.yamlConfiguration,
-                            sequence: i,
-                            status: Status.ACTIVE,
-                            type: template.contractType,
-                          };
-                        }),
-                      };
-                      props
-                        .createProject(request)
-                        .then(() => {
-                          setIsLoading(false);
-                          toast.update(tId, {
-                            render: `Project "${projectName}" was created!`,
-                            type: "success",
-                            icon: "🌈",
-                            autoClose: 5000,
-                            closeOnClick: true,
-                            isLoading: false,
-                          });
-                          router.push("/project");
-                        })
-                        .catch((reason) => {
-                          console.error(reason);
-                          toast.update(tId, {
-                            render: "Fail to create project",
-                            type: "error",
-                            autoClose: 5000,
-                            closeOnClick: true,
-                            isLoading: false,
-                          });
-                        });
-                      onClose();
-                    }}
-                    isLoading={isLoading}
-                    isDisabled={projectName === ""}
-                  >
-                    Confirm
-                  </Button>
-                </ModalFooter>
-              </>
-            )}
-          </ModalContent>
-        </Modal>
+        <SaveProjectModal
+          isOpen={isOpen}
+          isLoading={isLoading}
+          onClose={onClose}
+          onSaveProjectClick={onCreateProjectClick}
+        />
       </div>
     </div>
   );
