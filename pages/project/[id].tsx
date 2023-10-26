@@ -142,7 +142,7 @@ export default function Page() {
       <div className="container max-w-[1024px] gap-4 relative">
         <div className="mx-auto w-full px-5 pb-6 flex flex-row justify-between">
           <h1 className="text-3xl font-thin uppercase justify-center">
-            Project #{project?.id}: {project?.name}
+            Project: {project?.name}
           </h1>
           <div className="flex flex-row">
             <div className="flex flex-row gap-2">
