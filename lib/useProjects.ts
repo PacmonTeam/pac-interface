@@ -104,13 +104,20 @@ export const useDeployProject = () => {
 };
 
 export const useProject = (id: number | undefined) => {
-  // TOFIX: prevent the first call when id = 0 or undefined
-  const fetcher = (url: string): Promise<ProjectResponse> => {
+  const fetcher = (
+    url: string,
+    id: number | undefined
+  ): Promise<ProjectResponse | undefined> => {
+    // skip if id is not fetched
+    if (id === 0 || id === undefined) {
+      return Promise.resolve(undefined);
+    }
     return fetch(url).then((r) => r.json());
   };
+
   const { data, error, isLoading, mutate } = useSwr(
-    `${BASE_API}/projects/${id}`,
-    fetcher
+    [`${BASE_API}/projects/${id}`, id],
+    ([url, id]) => fetcher(url, id)
   );
 
   if (error) {
