@@ -15,7 +15,7 @@ export enum ScriptType {
   YAML = "YAML",
 }
 
-interface TemplateRequest {
+interface UpsertTemplateRequest {
   displayName: string;
   script: string;
   configuration: string;
@@ -25,10 +25,10 @@ interface TemplateRequest {
 }
 export interface CreateProjectRequest {
   name: string;
-  templates: TemplateRequest[];
+  templates: UpsertTemplateRequest[];
 }
 
-export interface Template extends TemplateRequest {
+export interface Template extends UpsertTemplateRequest {
   id: number;
   address: string;
   projectId: number;
@@ -57,22 +57,10 @@ export interface CreateProjectResponse {
   // TODO: Fill in if we use or delete
 }
 
-interface TemplateResponse {
-  id: number;
-  script: string;
-  configuration: string;
-  type: ContractType;
-  sequence: number;
-  status: Status;
-  projectId: number;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
 export interface ProjectResponse {
   id: number;
   name: string;
-  templates?: Array<TemplateResponse>;
+  templates?: Array<Template>;
   createdAt: Date;
   updatedAt: Date;
 }
