@@ -28,6 +28,10 @@ export interface CreateProjectRequest {
   templates: UpsertTemplateRequest[];
 }
 
+export interface UpsertProjectRequest extends CreateProjectRequest {
+  id: number;
+}
+
 export interface Template extends UpsertTemplateRequest {
   id: number;
   address: string;

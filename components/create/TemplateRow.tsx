@@ -70,6 +70,7 @@ export default function TemplateRow(props: TemplateRowProps) {
             </span>
             {solidityEditableBadge()}
           </div>
+          {/* TODO: Code mirror editor seems to be slow and lagging when we edit with many contracts in state */}
           {/* TODO: Size of editor can sometimes be expanded for some reasons */}
           <CodeMirror
             value={props.solidityScript}
