@@ -19,7 +19,7 @@ export const usePluginTemplateMap = () => {
 
   if (data) {
     data.forEach((pluginTemplate) => {
-      // need to ensure that pluginTemplate.name == ContractType value
+      // need to ensure that pluginTemplate.name == TemplateType value
       pluginTemplateMap[pluginTemplate.name] = pluginTemplate;
     });
   }

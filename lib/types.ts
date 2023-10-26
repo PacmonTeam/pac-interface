@@ -3,7 +3,7 @@ export enum Status {
   INACTIVE = "INACTIVE",
 }
 
-export enum ContractType {
+export enum TemplateType {
   ERC_20 = "ERC-20 Token",
   UNISWAP_V2 = "Uniswap V2 Pair",
   PRICE_FEED = "Price Feed",
@@ -21,7 +21,7 @@ interface UpsertTemplateRequest {
   configuration: string;
   sequence: number;
   status: Status;
-  type: ContractType;
+  type: TemplateType;
 }
 export interface CreateProjectRequest {
   name: string;
