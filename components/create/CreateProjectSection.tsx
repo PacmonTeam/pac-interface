@@ -2,9 +2,8 @@
 
 import { useState } from "react";
 import AddContractButton from "./AddContractButton";
-import { ContractType, ScriptType } from "@/utils";
 import TemplateRow, { TemplateRowProps } from "@/components/create/TemplateRow";
-import { getPlaceholderTemplateCode } from "@/components/create/CodePlaceholder";
+import { getPluginTemplateCode } from "@/components/create/CodePlaceholder";
 import {
   Button,
   Modal,
@@ -17,8 +16,11 @@ import {
 } from "@nextui-org/react";
 import { BsCloudUploadFill } from "react-icons/bs";
 import {
+  ContractType,
   CreateProjectRequest,
   CreateProjectResponse,
+  PluginTemplateMap,
+  ScriptType,
   Status,
 } from "@/lib/types";
 import { useRouter } from "next/router";
@@ -28,6 +30,7 @@ interface CreateProjectSectionProps {
   createProject: (
     request: CreateProjectRequest
   ) => Promise<CreateProjectResponse>;
+  pluginTemplateMap: PluginTemplateMap;
 }
 
 export default function CreateProjectSection(props: CreateProjectSectionProps) {
@@ -37,20 +40,6 @@ export default function CreateProjectSection(props: CreateProjectSectionProps) {
   const [projectName, setProjectName] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const toText = (c: ContractType) => {
-    switch (c) {
-      case ContractType.ERC_20:
-        return "ERC-20";
-      case ContractType.UNISWAP_V2:
-        return "UniswapV2";
-      case ContractType.PRICE_FEED:
-        return "PriceFeed";
-      case ContractType.CUSTOM:
-        return "Custom";
-      default:
-        return "N/A";
-    }
-  };
   const setScript = (script: string, scriptType: ScriptType, id: string) => {
     const nextTemplateRows = templateRows.map((props) => {
       if (props.id === id) {
@@ -65,21 +54,29 @@ export default function CreateProjectSection(props: CreateProjectSectionProps) {
     });
     setTemplateRows(nextTemplateRows);
   };
+  const deleteTemplateRowProps = (id: string) => {
+    const nextTemplateRowProps = templateRows.filter(
+      (props) => props.id !== id
+    );
+    setTemplateRows(nextTemplateRowProps);
+  };
   const onClickAddContract = (contractType: ContractType) => {
     setTemplateRows([
       ...templateRows,
       {
-        id: `${toText(contractType)}-${templateRows.length}`,
+        id: `${contractType}-${templateRows.length}`,
         index: templateRows.length,
-        text: toText(contractType),
+        text: contractType,
         contractType: contractType,
-        solidityScript: getPlaceholderTemplateCode(
+        solidityScript: getPluginTemplateCode(
           ScriptType.SOLIDITY,
-          contractType
+          contractType,
+          props.pluginTemplateMap
         ),
-        yamlConfiguration: getPlaceholderTemplateCode(
+        yamlConfiguration: getPluginTemplateCode(
           ScriptType.YAML,
-          contractType
+          contractType,
+          props.pluginTemplateMap
         ),
         setScript: setScript,
       },
@@ -99,7 +96,6 @@ export default function CreateProjectSection(props: CreateProjectSectionProps) {
               ></AddContractButton>
               {templateRows.length > 0 ? (
                 <Button
-                  isLoading={isLoading}
                   color="primary"
                   onClick={() => {
                     onOpen();
@@ -124,6 +120,7 @@ export default function CreateProjectSection(props: CreateProjectSectionProps) {
               solidityScript={props.solidityScript}
               yamlConfiguration={props.yamlConfiguration}
               setScript={setScript}
+              deleteTemplate={deleteTemplateRowProps}
             />
           );
         })}
@@ -161,17 +158,18 @@ export default function CreateProjectSection(props: CreateProjectSectionProps) {
                         name: projectName,
                         templates: templateRows.map((template, i) => {
                           return {
+                            displayName: template.id,
                             script: template.solidityScript,
                             configuration: template.yamlConfiguration,
                             sequence: i,
                             status: Status.ACTIVE,
+                            type: template.contractType,
                           };
                         }),
                       };
                       props
                         .createProject(request)
-                        .then((response) => {
-                          console.log("done with", response);
+                        .then(() => {
                           setIsLoading(false);
                           toast.update(tId, {
                             render: `Project "${projectName}" was created!`,

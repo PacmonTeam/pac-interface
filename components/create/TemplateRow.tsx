@@ -1,9 +1,18 @@
 import CodeMirror from "@uiw/react-codemirror";
 import { langs } from "@uiw/codemirror-extensions-langs";
-import { ContractType, ScriptType } from "@/utils";
 import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import { MdOutlineEditOff, MdOutlineModeEditOutline } from "react-icons/md";
 import { SiSolidity, SiYaml } from "react-icons/si";
+import { Button } from "@nextui-org/react";
+import { ContractType, ScriptType } from "@/lib/types";
+
+export type TemplateRowPropsSetScriptFunction = (
+  script: string,
+  scriptType: ScriptType,
+  id: string
+) => void;
+
+type TemplateRowPropsDeleteTemplateFunction = (id: string) => void;
 
 export interface TemplateRowProps {
   id: string;
@@ -12,7 +21,8 @@ export interface TemplateRowProps {
   contractType: ContractType;
   solidityScript: string;
   yamlConfiguration: string;
-  setScript?: (script: string, scriptType: ScriptType, id: string) => void;
+  setScript?: TemplateRowPropsSetScriptFunction;
+  deleteTemplate?: TemplateRowPropsDeleteTemplateFunction;
 }
 
 export default function TemplateRow(props: TemplateRowProps) {
@@ -33,10 +43,24 @@ export default function TemplateRow(props: TemplateRowProps) {
   };
   return (
     <div className="flex flex-col mb-4 p-unit-lg box-border rounded-lg bg-content1 w-full">
-      <div className="mb-4">
-        <span className="text-slate-400 font-light">#{props.index + 1}:</span>
-        &nbsp;
-        <span className="text-slate-100">{props.text}</span>
+      <div className="flex flex-row mb-4 justify-between items-center">
+        <div className="flex flex-row">
+          <span className="text-slate-400 font-light">#{props.index + 1}:</span>
+          &nbsp;
+          <span className="text-slate-100">{props.text}</span>
+        </div>
+        <div className="flex flex-row">
+          <Button
+            color="danger"
+            variant="bordered"
+            size="sm"
+            onClick={() => {
+              if (props.deleteTemplate) props.deleteTemplate(props.id);
+            }}
+          >
+            Delete
+          </Button>
+        </div>
       </div>
       <div className="flex flex-row text-xs">
         <div className="w-2/3">
@@ -46,6 +70,8 @@ export default function TemplateRow(props: TemplateRowProps) {
             </span>
             {solidityEditableBadge()}
           </div>
+          {/* TODO: Code mirror editor seems to be slow and lagging when we edit with many contracts in state */}
+          {/* TODO: Size of editor can sometimes be expanded for some reasons */}
           <CodeMirror
             value={props.solidityScript}
             height="200px"
@@ -56,6 +82,7 @@ export default function TemplateRow(props: TemplateRowProps) {
             theme={vscodeDark}
             editable={isSolidityScriptEditable}
             onChange={(value) => {
+              // TODO: Safely disable the onChange if it's not editable
               if (props.setScript)
                 props.setScript(value, ScriptType.SOLIDITY, props.id);
             }}
