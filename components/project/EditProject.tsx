@@ -1,4 +1,4 @@
-import TemplateRow, { TemplateRowProps } from "../create/TemplateRow";
+import TemplateRow, { TemplateRowProps } from "../template/TemplateRow";
 
 interface EditProjectProps {
   templateRowProps: TemplateRowProps[];

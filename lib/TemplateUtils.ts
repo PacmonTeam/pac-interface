@@ -1,5 +1,5 @@
 import { ProjectResponse } from "./types";
-import { TemplateRowProps } from "@/components/create/TemplateRow";
+import { TemplateRowProps } from "@/components/template/TemplateRow";
 
 export const getTemplateRowPropsArrayFromProject = (
   project: ProjectResponse | undefined

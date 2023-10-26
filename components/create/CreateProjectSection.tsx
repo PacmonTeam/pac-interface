@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import AddContractButton from "./AddContractButton";
-import TemplateRow, { TemplateRowProps } from "@/components/create/TemplateRow";
-import { getPluginTemplateCode } from "@/components/create/CodePlaceholder";
+import AddContractButton from "../template/AddContractButton";
+import TemplateRow, {
+  TemplateRowProps,
+} from "@/components/template/TemplateRow";
+import { getPluginTemplateCode } from "@/lib/CodePlaceholder";
 import { Button, useDisclosure } from "@nextui-org/react";
 import { BsCloudUploadFill } from "react-icons/bs";
 import {

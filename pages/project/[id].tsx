@@ -1,6 +1,8 @@
-import AddContractButton from "@/components/create/AddContractButton";
-import { getPluginTemplateCode } from "@/components/create/CodePlaceholder";
-import TemplateRow, { TemplateRowProps } from "@/components/create/TemplateRow";
+import AddContractButton from "@/components/template/AddContractButton";
+import { getPluginTemplateCode } from "@/lib/CodePlaceholder";
+import TemplateRow, {
+  TemplateRowProps,
+} from "@/components/template/TemplateRow";
 import SaveProjectModal from "@/components/project/SaveProjectModal";
 import { BASE_API } from "@/config/url";
 import { getTemplateRowPropsArrayFromProject } from "@/lib/TemplateUtils";
