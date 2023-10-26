@@ -1,10 +1,8 @@
-import CodeMirror from "@uiw/react-codemirror";
-import { langs } from "@uiw/codemirror-extensions-langs";
-import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import { MdOutlineEditOff, MdOutlineModeEditOutline } from "react-icons/md";
 import { SiSolidity, SiYaml } from "react-icons/si";
 import { Button } from "@nextui-org/react";
 import { TemplateType, ScriptType } from "@/lib/types";
+import Editor from "./Editor";
 
 export type TemplateRowPropsSetScriptFunction = (
   script: string,
@@ -27,7 +25,6 @@ export interface TemplateRowProps {
 
 export default function TemplateRow(props: TemplateRowProps) {
   const isSolidityScriptEditable = props.templateType === TemplateType.CUSTOM;
-  const editableTheme = vscodeDark;
   const solidityEditableBadge = () => {
     return isSolidityScriptEditable ? (
       <span className="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium text-green-700 border-green-600 ring-1 ring-inset ring-green-600/20">
@@ -72,15 +69,10 @@ export default function TemplateRow(props: TemplateRowProps) {
           </div>
           {/* TODO: Code mirror editor seems to be slow and lagging when we edit with many templates in state */}
           {/* TODO: Size of editor can sometimes be expanded for some reasons */}
-          <CodeMirror
-            value={props.solidityScript}
-            height="200px"
-            extensions={[langs.solidity()]}
-            basicSetup={{
-              highlightActiveLine: isSolidityScriptEditable,
-            }}
-            theme={vscodeDark}
-            editable={isSolidityScriptEditable}
+          <Editor
+            script={props.solidityScript}
+            scriptType={ScriptType.SOLIDITY}
+            isEditable={isSolidityScriptEditable}
             onChange={(value) => {
               // TODO: Safely disable the onChange if it's not editable
               if (props.setScript)
@@ -98,12 +90,12 @@ export default function TemplateRow(props: TemplateRowProps) {
               &nbsp;&nbsp;Editable
             </span>
           </div>
-          <CodeMirror
-            value={props.yamlConfiguration}
-            height="200px"
-            extensions={[langs.yaml()]}
-            theme={editableTheme}
+          <Editor
+            script={props.yamlConfiguration}
+            scriptType={ScriptType.YAML}
+            isEditable={true}
             onChange={(value) => {
+              // TODO: Safely disable the onChange if it's not editable
               if (props.setScript)
                 props.setScript(value, ScriptType.YAML, props.id);
             }}
