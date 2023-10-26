@@ -13,6 +13,7 @@ export const usePluginTemplateMap = () => {
   const pluginTemplateMap: PluginTemplateMap = {};
 
   if (error) {
+    // TODO: show some error noti
     console.error(error);
   }
 

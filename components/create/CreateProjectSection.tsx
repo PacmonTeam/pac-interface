@@ -158,18 +158,18 @@ export default function CreateProjectSection(props: CreateProjectSectionProps) {
                         name: projectName,
                         templates: templateRows.map((template, i) => {
                           return {
+                            displayName: template.id,
                             script: template.solidityScript,
                             configuration: template.yamlConfiguration,
                             sequence: i,
                             status: Status.ACTIVE,
-                            // TODO: Include 'type' in the create request
+                            type: template.contractType,
                           };
                         }),
                       };
                       props
                         .createProject(request)
-                        .then((response) => {
-                          console.log("done with", response);
+                        .then(() => {
                           setIsLoading(false);
                           toast.update(tId, {
                             render: `Project "${projectName}" was created!`,

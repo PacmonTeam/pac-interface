@@ -18,11 +18,13 @@ export enum ScriptType {
 
 export interface Template {
   id: number;
+  displayName: string;
   script: string;
   configuration: string;
   sequence: number;
   status: STATUS;
   address: string;
+  type: ContractType;
   projectId: number;
   createdAt: string;
   updatedAt: string;
