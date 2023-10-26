@@ -4,16 +4,7 @@ import { useState } from "react";
 import AddContractButton from "./AddContractButton";
 import TemplateRow, { TemplateRowProps } from "@/components/create/TemplateRow";
 import { getPluginTemplateCode } from "@/components/create/CodePlaceholder";
-import {
-  Button,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  Textarea,
-  useDisclosure,
-} from "@nextui-org/react";
+import { Button, useDisclosure } from "@nextui-org/react";
 import { BsCloudUploadFill } from "react-icons/bs";
 import {
   ContractType,
@@ -36,13 +27,14 @@ interface CreateProjectSectionProps {
 
 export default function CreateProjectSection(props: CreateProjectSectionProps) {
   const router = useRouter();
-  const [templateRows, setTemplateRows] = useState<TemplateRowProps[]>([]);
+  const [templateRowProps, setTemplateRowProps] = useState<TemplateRowProps[]>(
+    []
+  );
   const [isLoading, setIsLoading] = useState(false);
-  const [projectName, setProjectName] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const setScript = (script: string, scriptType: ScriptType, id: string) => {
-    const nextTemplateRows = templateRows.map((props) => {
+    const nextTemplateRows = templateRowProps.map((props) => {
       if (props.id === id) {
         switch (scriptType) {
           case ScriptType.SOLIDITY:
@@ -53,20 +45,20 @@ export default function CreateProjectSection(props: CreateProjectSectionProps) {
       }
       return props;
     });
-    setTemplateRows(nextTemplateRows);
+    setTemplateRowProps(nextTemplateRows);
   };
   const deleteTemplateRowProps = (id: string) => {
-    const nextTemplateRowProps = templateRows.filter(
+    const nextTemplateRowProps = templateRowProps.filter(
       (props) => props.id !== id
     );
-    setTemplateRows(nextTemplateRowProps);
+    setTemplateRowProps(nextTemplateRowProps);
   };
   const onClickAddContract = (contractType: ContractType) => {
-    setTemplateRows([
-      ...templateRows,
+    setTemplateRowProps([
+      ...templateRowProps,
       {
-        id: `${contractType}-${templateRows.length}`,
-        index: templateRows.length,
+        id: `${contractType}-${templateRowProps.length}`,
+        index: templateRowProps.length,
         text: contractType,
         contractType: contractType,
         solidityScript: getPluginTemplateCode(
@@ -89,7 +81,7 @@ export default function CreateProjectSection(props: CreateProjectSectionProps) {
     const tId = toast.loading(`Creating project "${projectName}"`);
     const request: CreateProjectRequest = {
       name: projectName,
-      templates: templateRows.map((template, i) => {
+      templates: templateRowProps.map((template, i) => {
         return {
           displayName: template.id,
           script: template.solidityScript,
@@ -139,7 +131,7 @@ export default function CreateProjectSection(props: CreateProjectSectionProps) {
               <AddContractButton
                 onClick={onClickAddContract}
               ></AddContractButton>
-              {templateRows.length > 0 ? (
+              {templateRowProps.length > 0 ? (
                 <Button
                   color="primary"
                   onClick={() => {
@@ -154,7 +146,7 @@ export default function CreateProjectSection(props: CreateProjectSectionProps) {
             </div>
           </div>
         </div>
-        {templateRows.map((props) => {
+        {templateRowProps.map((props) => {
           return (
             <TemplateRow
               key={props.id}
