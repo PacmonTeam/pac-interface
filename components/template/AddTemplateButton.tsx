@@ -1,4 +1,4 @@
-import { ContractType } from "@/lib/types";
+import { TemplateType } from "@/lib/types";
 import { Button } from "@nextui-org/button";
 import {
   Dropdown,
@@ -8,13 +8,13 @@ import {
 } from "@nextui-org/dropdown";
 import { IoIosArrowDropdown } from "react-icons/io";
 
-interface AddContractButtonProps {
-  onClick: (c: ContractType) => void;
+interface AddTemplateButtonProps {
+  onClick: (c: TemplateType) => void;
 }
 
-export default function AddContractButton({ onClick }: AddContractButtonProps) {
-  const getContractTypes = (): ContractType[] => {
-    return Object.values(ContractType);
+export default function AddTemplateButton({ onClick }: AddTemplateButtonProps) {
+  const getTemplateTypes = (): TemplateType[] => {
+    return Object.values(TemplateType);
   };
   return (
     <div>
@@ -26,14 +26,14 @@ export default function AddContractButton({ onClick }: AddContractButtonProps) {
           </Button>
         </DropdownTrigger>
         <DropdownMenu aria-label="Static Actions">
-          {getContractTypes().map((contractType) => {
-            // TODO: scroll to the bottom when contract is clicked
+          {getTemplateTypes().map((templateType) => {
+            // TODO: scroll to the bottom when template is clicked
             return (
               <DropdownItem
-                key={contractType}
-                onClick={() => onClick(contractType)}
+                key={templateType}
+                onClick={() => onClick(templateType)}
               >
-                {contractType}
+                {templateType}
               </DropdownItem>
             );
           })}

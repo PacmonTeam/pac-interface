@@ -4,7 +4,7 @@ import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import { MdOutlineEditOff, MdOutlineModeEditOutline } from "react-icons/md";
 import { SiSolidity, SiYaml } from "react-icons/si";
 import { Button } from "@nextui-org/react";
-import { ContractType, ScriptType } from "@/lib/types";
+import { TemplateType, ScriptType } from "@/lib/types";
 
 export type TemplateRowPropsSetScriptFunction = (
   script: string,
@@ -18,7 +18,7 @@ export interface TemplateRowProps {
   id: string;
   index: number;
   text: string;
-  contractType: ContractType;
+  templateType: TemplateType;
   solidityScript: string;
   yamlConfiguration: string;
   setScript?: TemplateRowPropsSetScriptFunction;
@@ -26,7 +26,7 @@ export interface TemplateRowProps {
 }
 
 export default function TemplateRow(props: TemplateRowProps) {
-  const isSolidityScriptEditable = props.contractType === ContractType.CUSTOM;
+  const isSolidityScriptEditable = props.templateType === TemplateType.CUSTOM;
   const editableTheme = vscodeDark;
   const solidityEditableBadge = () => {
     return isSolidityScriptEditable ? (
@@ -70,7 +70,7 @@ export default function TemplateRow(props: TemplateRowProps) {
             </span>
             {solidityEditableBadge()}
           </div>
-          {/* TODO: Code mirror editor seems to be slow and lagging when we edit with many contracts in state */}
+          {/* TODO: Code mirror editor seems to be slow and lagging when we edit with many templates in state */}
           {/* TODO: Size of editor can sometimes be expanded for some reasons */}
           <CodeMirror
             value={props.solidityScript}

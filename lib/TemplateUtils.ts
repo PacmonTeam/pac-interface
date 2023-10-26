@@ -7,13 +7,12 @@ export const getTemplateRowPropsArrayFromProject = (
   return project
     ? project.templates
       ? project.templates.map((template, i) => {
-          const contractType = template.type;
           return {
             key: template.id,
-            id: `${contractType}-${i}`,
+            id: `${template.type}-${i}`,
             index: i,
-            text: contractType,
-            contractType: contractType,
+            text: template.type,
+            templateType: template.type,
             solidityScript: template.script,
             yamlConfiguration: template.configuration,
           };

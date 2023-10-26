@@ -1,4 +1,4 @@
-import { ScriptType, ContractType, PluginTemplateMap } from "@/lib/types";
+import { ScriptType, TemplateType, PluginTemplateMap } from "@/lib/types";
 
 // Use this dude: https://jsstringconverter.bbody.io/
 // Note: Default template placeholder when something went wrong
@@ -741,15 +741,15 @@ output: "ERC20"`;
 
 export const getPluginTemplateCode = (
   scriptType: ScriptType,
-  contractType: ContractType,
+  templateType: TemplateType,
   pluginTemplateMap: PluginTemplateMap
 ) => {
   let code = "";
-  if (pluginTemplateMap[contractType]) {
+  if (pluginTemplateMap[templateType]) {
     if (scriptType === ScriptType.SOLIDITY)
-      code = pluginTemplateMap[contractType].sampleScript;
+      code = pluginTemplateMap[templateType].sampleScript;
     else if (scriptType === ScriptType.YAML)
-      code = pluginTemplateMap[contractType].sampleConfiguration;
+      code = pluginTemplateMap[templateType].sampleConfiguration;
   } else {
     // default code: when loading fails
     if (scriptType === ScriptType.SOLIDITY) code = PLACEHOLDER_SOLIDITY_ERC20;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import AddContractButton from "../template/AddContractButton";
+import AddTemplateButton from "../template/AddTemplateButton";
 import TemplateRow, {
   TemplateRowProps,
 } from "@/components/template/TemplateRow";
@@ -9,7 +9,7 @@ import { getPluginTemplateCode } from "@/lib/CodePlaceholder";
 import { Button, useDisclosure } from "@nextui-org/react";
 import { BsCloudUploadFill } from "react-icons/bs";
 import {
-  ContractType,
+  TemplateType,
   CreateProjectRequest,
   CreateProjectResponse,
   PluginTemplateMap,
@@ -57,22 +57,22 @@ export default function CreateProjectSection(props: CreateProjectSectionProps) {
     setTemplateRowProps(nextTemplateRowProps);
   };
 
-  const onClickAddContract = (contractType: ContractType) => {
+  const onClickAddTemplate = (templateType: TemplateType) => {
     setTemplateRowProps([
       ...templateRowProps,
       {
-        id: `${contractType}-${templateRowProps.length}`,
+        id: `${templateType}-${templateRowProps.length}`,
         index: templateRowProps.length,
-        text: contractType,
-        contractType: contractType,
+        text: templateType,
+        templateType: templateType,
         solidityScript: getPluginTemplateCode(
           ScriptType.SOLIDITY,
-          contractType,
+          templateType,
           props.pluginTemplateMap
         ),
         yamlConfiguration: getPluginTemplateCode(
           ScriptType.YAML,
-          contractType,
+          templateType,
           props.pluginTemplateMap
         ),
         setScript: setScript,
@@ -92,7 +92,7 @@ export default function CreateProjectSection(props: CreateProjectSectionProps) {
           configuration: template.yamlConfiguration,
           sequence: i,
           status: Status.ACTIVE,
-          type: template.contractType,
+          type: template.templateType,
         };
       }),
     };
@@ -132,9 +132,9 @@ export default function CreateProjectSection(props: CreateProjectSectionProps) {
           </h1>
           <div className="flex flex-row">
             <div className="flex flex-row gap-2">
-              <AddContractButton
-                onClick={onClickAddContract}
-              ></AddContractButton>
+              <AddTemplateButton
+                onClick={onClickAddTemplate}
+              ></AddTemplateButton>
               {templateRowProps.length > 0 ? (
                 <Button
                   color="primary"
@@ -157,7 +157,7 @@ export default function CreateProjectSection(props: CreateProjectSectionProps) {
               id={props.id}
               index={props.index}
               text={props.text}
-              contractType={props.contractType}
+              templateType={props.templateType}
               solidityScript={props.solidityScript}
               yamlConfiguration={props.yamlConfiguration}
               setScript={setScript}

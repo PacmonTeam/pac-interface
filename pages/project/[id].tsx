@@ -1,4 +1,4 @@
-import AddContractButton from "@/components/template/AddContractButton";
+import AddTemplateButton from "@/components/template/AddTemplateButton";
 import { getPluginTemplateCode } from "@/lib/CodePlaceholder";
 import TemplateRow, {
   TemplateRowProps,
@@ -6,7 +6,7 @@ import TemplateRow, {
 import SaveProjectModal from "@/components/project/SaveProjectModal";
 import { BASE_API } from "@/config/url";
 import {
-  ContractType,
+  TemplateType,
   ScriptType,
   Status,
   UpsertProjectRequest,
@@ -63,22 +63,22 @@ export default function Page() {
     setTemplateRowProps(nextTemplateRowProps);
   };
 
-  const onClickAddContract = (contractType: ContractType) => {
+  const onClickAddTemplate = (templateType: TemplateType) => {
     setTemplateRowProps([
       ...templateRowProps,
       {
-        id: `${contractType}-${templateRowProps.length}`,
+        id: `${templateType}-${templateRowProps.length}`,
         index: templateRowProps.length,
-        text: contractType,
-        contractType: contractType,
+        text: templateType,
+        templateType: templateType,
         solidityScript: getPluginTemplateCode(
           ScriptType.SOLIDITY,
-          contractType,
+          templateType,
           pluginTemplateMap
         ),
         yamlConfiguration: getPluginTemplateCode(
           ScriptType.YAML,
-          contractType,
+          templateType,
           pluginTemplateMap
         ),
         setScript: setScript,
@@ -100,7 +100,7 @@ export default function Page() {
             configuration: template.yamlConfiguration,
             sequence: i,
             status: Status.ACTIVE,
-            type: template.contractType,
+            type: template.templateType,
           };
         }),
       };
@@ -150,9 +150,9 @@ export default function Page() {
           </h1>
           <div className="flex flex-row">
             <div className="flex flex-row gap-2">
-              <AddContractButton
-                onClick={onClickAddContract}
-              ></AddContractButton>
+              <AddTemplateButton
+                onClick={onClickAddTemplate}
+              ></AddTemplateButton>
               {templateRowProps.length > 0 ? (
                 <Button
                   color="primary"
@@ -177,7 +177,7 @@ export default function Page() {
               id={props.id}
               index={props.index}
               text={props.text}
-              contractType={props.contractType}
+              templateType={props.templateType}
               solidityScript={props.solidityScript}
               yamlConfiguration={props.yamlConfiguration}
               setScript={setScript}
