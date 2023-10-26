@@ -108,7 +108,7 @@ export const useProject = (id: number | undefined) => {
   const fetcher = (url: string): Promise<ProjectResponse> => {
     return fetch(url).then((r) => r.json());
   };
-  const { data, error, isLoading } = useSwr(
+  const { data, error, isLoading, mutate } = useSwr(
     `${BASE_API}/projects/${id}`,
     fetcher
   );
@@ -116,5 +116,5 @@ export const useProject = (id: number | undefined) => {
   if (error) {
     console.error(error);
   }
-  return { data, error, isLoading };
+  return { data, error, isLoading, mutate };
 };

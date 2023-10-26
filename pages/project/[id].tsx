@@ -21,7 +21,7 @@ import { toast } from "react-toastify";
 export default function Page() {
   const router = useRouter();
   const projectId: number = parseInt(router.query.id?.toString() || "0");
-  const { data: project } = useProject(projectId);
+  const { data: project, mutate } = useProject(projectId);
   const { pluginTemplateMap } = usePluginTemplateMap();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -118,6 +118,7 @@ export default function Page() {
             closeOnClick: true,
             isLoading: false,
           });
+          mutate(project);
           router.push("/project");
         })
         .catch((reason) => {
