@@ -1,1 +1,1 @@
-export const BASE_API = "https://pacmon.suijin.xyz/api";
+export const BASE_API = "https://o.pacmon.suijin.xyz/api";
