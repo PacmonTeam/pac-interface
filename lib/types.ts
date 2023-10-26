@@ -1,7 +1,6 @@
-// TODO: merge with status below
-enum STATUS {
-  ACTIVE,
-  INACTIVE,
+export enum Status {
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
 }
 
 export enum ContractType {
@@ -12,19 +11,26 @@ export enum ContractType {
 }
 
 export enum ScriptType {
-  SOLIDITY,
-  YAML,
+  SOLIDITY = "Solidity",
+  YAML = "YAML",
 }
 
-export interface Template {
-  id: number;
+interface TemplateRequest {
   displayName: string;
   script: string;
   configuration: string;
   sequence: number;
-  status: STATUS;
-  address: string;
+  status: Status;
   type: ContractType;
+}
+export interface CreateProjectRequest {
+  name: string;
+  templates: TemplateRequest[];
+}
+
+export interface Template extends TemplateRequest {
+  id: number;
+  address: string;
   projectId: number;
   createdAt: string;
   updatedAt: string;
@@ -45,21 +51,6 @@ export interface Node {
   project: Project;
   createdAt: string;
   updatedAt: string;
-}
-export enum Status {
-  ACTIVE = "ACTIVE",
-  INACTIVE = "INACTIVE",
-}
-
-interface TemplateRequest {
-  script: string;
-  configuration: string;
-  sequence: number;
-  status: Status;
-}
-export interface CreateProjectRequest {
-  name: string;
-  templates: TemplateRequest[];
 }
 
 export interface CreateProjectResponse {
