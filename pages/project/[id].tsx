@@ -27,7 +27,7 @@ export default function Page() {
   const { pluginTemplateMap } = usePluginTemplateMap();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isProjectLoaded, setIsProjectLoaded] = useState(false);
   const [templateRowProps, setTemplateRowProps] = useState<TemplateRowProps[]>(
     []
   );
@@ -133,10 +133,10 @@ export default function Page() {
   };
 
   // Initialization
-  if (!isLoaded) {
+  if (!isProjectLoaded) {
     if (project && project.templates) {
       setTemplateRowProps(getTemplateRowPropsArrayFromProject(project));
-      setIsLoaded(true);
+      setIsProjectLoaded(true);
     }
     return null;
   }
