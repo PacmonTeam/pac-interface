@@ -1,40 +1,7 @@
-import { ScriptType, ContractType } from "@/lib/types";
-
-const solidityPlaceholder = `// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.4;
-
-contract SimpleStorage {
-    uint256 storedData;
-    function set(uint x) public {
-        storedData = x;
-    }
-    function get() public view returns (uint) {
-        return storedData;
-    }
-}
-`;
-
-const yamlPlaceholder = `doe: "a deer, a female deer"
-ray: "a drop of golden sun"
-pi: 3.14159
-xmas: true
-french-hens: 3
-calling-birds:
-  - huey
-  - dewey
-  - louie
-  - fred
-xmas-fifth-day:
-  calling-birds: four
-  french-hens: 3
-  golden-rings: 5
-  partridges:
-    count: 1
-    location: "a pear tree"
-  turtle-doves: two
-`;
+import { ScriptType, ContractType, PluginTemplateMap } from "@/lib/types";
 
 // Use this dude: https://jsstringconverter.bbody.io/
+// Note: Default template placeholder when something went wrong
 const PLACEHOLDER_SOLIDITY_ERC20 = `// Sources flattened with hardhat v2.18.1 https://hardhat.org
 
 // SPDX-License-Identifier: MIT AND UNLICENSED
@@ -772,30 +739,22 @@ manage:
         - uint256
 output: "ERC20"`;
 
-// TODO: should fetch initial code for each protocol from API
-export const getPlaceholderTemplateCode = (
+export const getPluginTemplateCode = (
   scriptType: ScriptType,
-  contractType: ContractType
-): string => {
-  switch (scriptType) {
-    case ScriptType.SOLIDITY:
-      switch (contractType) {
-        case ContractType.ERC_20:
-        case ContractType.UNISWAP_V2:
-        case ContractType.PRICE_FEED:
-        case ContractType.CUSTOM:
-        default:
-          return PLACEHOLDER_SOLIDITY_ERC20;
-      }
-    case ScriptType.YAML:
-      switch (contractType) {
-        case ContractType.ERC_20:
-        case ContractType.UNISWAP_V2:
-        case ContractType.PRICE_FEED:
-        case ContractType.CUSTOM:
-        default:
-          return PLACEHOLDER_YAML_ERC20;
-      }
+  contractType: ContractType,
+  pluginTemplateMap: PluginTemplateMap
+) => {
+  let code = "";
+  if (pluginTemplateMap[contractType]) {
+    if (scriptType === ScriptType.SOLIDITY)
+      code = pluginTemplateMap[contractType].sampleScript;
+    else if (scriptType === ScriptType.YAML)
+      code = pluginTemplateMap[contractType].sampleConfiguration;
+  } else {
+    // default code: when loading fails
+    if (scriptType === ScriptType.SOLIDITY) code = PLACEHOLDER_SOLIDITY_ERC20;
+    else if (scriptType === ScriptType.YAML) code = PLACEHOLDER_YAML_ERC20;
   }
-  return "";
+
+  return code;
 };

@@ -83,3 +83,16 @@ export interface ProjectResponse {
   createdAt: Date;
   updatedAt: Date;
 }
+
+// Note: The name 'Plugin' is duplicated with native browser Plugin which makes autocomplete misunderstood
+export interface PluginTemplate {
+  defaultDisplayName: string;
+  description: string;
+  name: string;
+  owner: string;
+  url: string;
+  sampleScript: string;
+  sampleConfiguration: string;
+}
+
+export type PluginTemplateMap = { [key: string]: PluginTemplate };

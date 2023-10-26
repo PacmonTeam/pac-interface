@@ -13,12 +13,9 @@ interface AddContractButtonProps {
 }
 
 export default function AddContractButton({ onClick }: AddContractButtonProps) {
-  const contractTypeItems: Array<{ key: ContractType; text: string }> = [
-    { key: ContractType.ERC_20, text: "ERC-20" },
-    { key: ContractType.UNISWAP_V2, text: "UniswapV2" },
-    { key: ContractType.PRICE_FEED, text: "PriceFeed" },
-    { key: ContractType.CUSTOM, text: "custom" },
-  ];
+  const getContractTypes = (): ContractType[] => {
+    return Object.values(ContractType);
+  };
   return (
     <div>
       <Dropdown>
@@ -29,10 +26,14 @@ export default function AddContractButton({ onClick }: AddContractButtonProps) {
           </Button>
         </DropdownTrigger>
         <DropdownMenu aria-label="Static Actions">
-          {contractTypeItems.map((item) => {
+          {getContractTypes().map((contractType) => {
+            // TODO: scroll to the bottom when contract is clicked
             return (
-              <DropdownItem key={item.key} onClick={() => onClick(item.key)}>
-                {item.text}
+              <DropdownItem
+                key={contractType}
+                onClick={() => onClick(contractType)}
+              >
+                {contractType}
               </DropdownItem>
             );
           })}

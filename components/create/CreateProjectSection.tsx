@@ -3,7 +3,7 @@
 import { useState } from "react";
 import AddContractButton from "./AddContractButton";
 import TemplateRow, { TemplateRowProps } from "@/components/create/TemplateRow";
-import { getPlaceholderTemplateCode } from "@/components/create/CodePlaceholder";
+import { getPluginTemplateCode } from "@/components/create/CodePlaceholder";
 import {
   Button,
   Modal,
@@ -19,17 +19,18 @@ import {
   ContractType,
   CreateProjectRequest,
   CreateProjectResponse,
+  PluginTemplateMap,
   ScriptType,
   Status,
 } from "@/lib/types";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
-import { toText } from "@/lib/TemplateUtils";
 
 interface CreateProjectSectionProps {
   createProject: (
     request: CreateProjectRequest
   ) => Promise<CreateProjectResponse>;
+  pluginTemplateMap: PluginTemplateMap;
 }
 
 export default function CreateProjectSection(props: CreateProjectSectionProps) {
@@ -63,17 +64,19 @@ export default function CreateProjectSection(props: CreateProjectSectionProps) {
     setTemplateRows([
       ...templateRows,
       {
-        id: `${toText(contractType)}-${templateRows.length}`,
+        id: `${contractType}-${templateRows.length}`,
         index: templateRows.length,
-        text: toText(contractType),
+        text: contractType,
         contractType: contractType,
-        solidityScript: getPlaceholderTemplateCode(
+        solidityScript: getPluginTemplateCode(
           ScriptType.SOLIDITY,
-          contractType
+          contractType,
+          props.pluginTemplateMap
         ),
-        yamlConfiguration: getPlaceholderTemplateCode(
+        yamlConfiguration: getPluginTemplateCode(
           ScriptType.YAML,
-          contractType
+          contractType,
+          props.pluginTemplateMap
         ),
         setScript: setScript,
       },

@@ -70,6 +70,7 @@ export default function TemplateRow(props: TemplateRowProps) {
             </span>
             {solidityEditableBadge()}
           </div>
+          {/* TODO: Size of editor can sometimes be expanded for some reasons */}
           <CodeMirror
             value={props.solidityScript}
             height="200px"
@@ -80,6 +81,7 @@ export default function TemplateRow(props: TemplateRowProps) {
             theme={vscodeDark}
             editable={isSolidityScriptEditable}
             onChange={(value) => {
+              // TODO: Safely disable the onChange if it's not editable
               if (props.setScript)
                 props.setScript(value, ScriptType.SOLIDITY, props.id);
             }}

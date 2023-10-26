@@ -1,11 +1,9 @@
 import AddContractButton from "@/components/create/AddContractButton";
-import { getPlaceholderTemplateCode } from "@/components/create/CodePlaceholder";
+import { getPluginTemplateCode } from "@/components/create/CodePlaceholder";
 import TemplateRow, { TemplateRowProps } from "@/components/create/TemplateRow";
-import {
-  getTemplateRowPropsArrayFromProject,
-  toText,
-} from "@/lib/TemplateUtils";
+import { getTemplateRowPropsArrayFromProject } from "@/lib/TemplateUtils";
 import { ContractType, ScriptType } from "@/lib/types";
+import { usePluginTemplateMap } from "@/lib/usePlugins";
 import { useProject } from "@/lib/useProjects";
 import { Button } from "@nextui-org/react";
 import { useRouter } from "next/router";
@@ -16,6 +14,7 @@ export default function Page() {
   const router = useRouter();
   const projectId: number = parseInt(router.query.id?.toString() || "0");
   const { data: project } = useProject(projectId);
+  const { pluginTemplateMap } = usePluginTemplateMap();
 
   const [isLoaded, setIsLoaded] = useState(false);
   const [templateRowProps, setTemplateRowProps] = useState<TemplateRowProps[]>(
@@ -53,17 +52,19 @@ export default function Page() {
     setTemplateRowProps([
       ...templateRowProps,
       {
-        id: `${toText(contractType)}-${templateRowProps.length}`,
+        id: `${contractType}-${templateRowProps.length}`,
         index: templateRowProps.length,
-        text: toText(contractType),
+        text: contractType,
         contractType: contractType,
-        solidityScript: getPlaceholderTemplateCode(
+        solidityScript: getPluginTemplateCode(
           ScriptType.SOLIDITY,
-          contractType
+          contractType,
+          pluginTemplateMap
         ),
-        yamlConfiguration: getPlaceholderTemplateCode(
+        yamlConfiguration: getPluginTemplateCode(
           ScriptType.YAML,
-          contractType
+          contractType,
+          pluginTemplateMap
         ),
         setScript: setScript,
       },
