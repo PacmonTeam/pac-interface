@@ -5,7 +5,6 @@ import TemplateRow, {
 } from "@/components/template/TemplateRow";
 import SaveProjectModal from "@/components/project/SaveProjectModal";
 import { BASE_API } from "@/config/url";
-import { getTemplateRowPropsArrayFromProject } from "@/lib/TemplateUtils";
 import {
   ContractType,
   ScriptType,
@@ -19,6 +18,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { AiOutlineSave } from "react-icons/ai";
 import { toast } from "react-toastify";
+import { getTemplateRowPropsArrayFromProject } from "@/lib/TemplateUtils";
 
 export default function Page() {
   const router = useRouter();

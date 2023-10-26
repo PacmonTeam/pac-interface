@@ -21,7 +21,7 @@ export default function AddContractButton({ onClick }: AddContractButtonProps) {
       <Dropdown>
         <DropdownTrigger>
           <Button variant="bordered">
-            Add Contract&nbsp;
+            Add Template&nbsp;
             <IoIosArrowDropdown />
           </Button>
         </DropdownTrigger>
