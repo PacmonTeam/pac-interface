@@ -47,12 +47,14 @@ export default function CreateProjectSection(props: CreateProjectSectionProps) {
     });
     setTemplateRowProps(nextTemplateRows);
   };
+
   const deleteTemplateRowProps = (id: string) => {
     const nextTemplateRowProps = templateRowProps.filter(
       (props) => props.id !== id
     );
     setTemplateRowProps(nextTemplateRowProps);
   };
+
   const onClickAddContract = (contractType: ContractType) => {
     setTemplateRowProps([
       ...templateRowProps,
