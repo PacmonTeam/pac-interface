@@ -6,12 +6,19 @@ import {
   ICompileOutputSelection,
   Node,
   ICompileContractOutput,
+  NodeWithSigner,
 } from "@/lib/types";
 import { ethers } from "ethers";
 import _ from "lodash";
 import { useState } from "react";
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
+
+export const getManageNodeById = async (
+  nodeId: string
+): Promise<NodeWithSigner> => {
+  return fetcher(`${BASE_API}/nodes/${nodeId}`);
+};
 
 export const useManageNode = <T = Node>(nodeId: any) => {
   const {

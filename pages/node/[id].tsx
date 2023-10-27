@@ -1,31 +1,57 @@
 import { Snippet } from "@nextui-org/react";
-import { useRouter } from "next/router";
 
-import { useManageNode, useCompileContracts } from "@/lib/useManageNode";
+import {
+  useManageNode,
+  useCompileContracts,
+  getManageNodeById,
+} from "@/lib/useManageNode";
 import {
   ContractWithConverted,
   FunctionOnConfiguration,
   ICompileContractInput,
   NodeWithSigner,
 } from "@/lib/types";
+import { GetStaticProps, GetStaticPaths, InferGetStaticPropsType } from "next";
 import ManageNodeHeader from "@/components/node/ManageNodeHeader";
-import { convertYAMLStringToJson } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { TbFaceIdError } from "react-icons/tb";
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
+import { convertYAMLStringToJson } from "@/lib/utils";
 import PreparingData from "@/components/node/PreparingData";
 import FunctionPanel from "@/components/node/FunctionPanel";
 import { useCallContract } from "@/lib/contract/useCallContract";
 import GeneratedWalletSlide from "@/components/node/GeneratedWalletSlide";
+import { getNodes } from "@/lib/useNodes";
 
 interface ContractList {
   [address: string]: ContractWithConverted;
 }
 
-export default function Page() {
-  const router = useRouter();
-  const nodeId = router.query.id;
-  const { data: node, isLoading } = useManageNode<NodeWithSigner>(nodeId);
+export const getStaticPaths: GetStaticPaths = async () => {
+  const nodes = await getNodes();
+  const paths = nodes?.map((node) => {
+    return {
+      params: { id: String(node.id) },
+    };
+  });
+
+  return {
+    paths,
+    fallback: false,
+  };
+};
+
+export const getStaticProps = (async ({ params }) => {
+  const nodeId = String(params?.id) || "";
+  const node = await getManageNodeById(nodeId);
+  return { props: { node } };
+}) satisfies GetStaticProps<{
+  node: NodeWithSigner;
+}>;
+
+export default function Page({
+  node,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   const [convertedContract, setConvertedContract] = useState<ContractList>();
   const [openSlide, setOpenSlide] = useState(false);
   const {
@@ -72,10 +98,10 @@ export default function Page() {
     })();
   }, [convertedContract]);
 
-  if (!node || isLoading || isCompiling) {
+  if (!node || isCompiling) {
     return (
       <PreparingData
-        isPluginsLoading={isLoading}
+        isPluginsLoading={!node}
         isProjectLoading={!node}
         isCompiling={isCompiling || !compiledData}
       />
