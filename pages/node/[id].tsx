@@ -21,37 +21,31 @@ import PreparingData from "@/components/node/PreparingData";
 import FunctionPanel from "@/components/node/FunctionPanel";
 import { useCallContract } from "@/lib/contract/useCallContract";
 import GeneratedWalletSlide from "@/components/node/GeneratedWalletSlide";
-import { getNodes } from "@/lib/useNodes";
+import { useRouter } from "next/router";
 
 interface ContractList {
   [address: string]: ContractWithConverted;
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const nodes = await getNodes();
-  const paths = nodes?.map((node) => {
-    return {
-      params: { id: String(node.id) },
-    };
-  });
-
   return {
-    paths,
-    fallback: false,
+    paths: [],
+    fallback: "blocking",
   };
 };
 
-export const getStaticProps = (async ({ params }) => {
-  const nodeId = String(params?.id) || "";
-  const node = await getManageNodeById(nodeId);
-  return { props: { node } };
+export const getStaticProps = (() => {
+  return { props: { showFetching: true } };
 }) satisfies GetStaticProps<{
-  node: NodeWithSigner;
+  showFetching: boolean;
 }>;
 
 export default function Page({
-  node,
+  showFetching,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+  const router = useRouter();
+  const nodeId = router.query.id;
+  const { data: node, isLoading } = useManageNode<NodeWithSigner>(nodeId);
   const [convertedContract, setConvertedContract] = useState<ContractList>();
   const [openSlide, setOpenSlide] = useState(false);
   const {
@@ -98,10 +92,13 @@ export default function Page({
     })();
   }, [convertedContract]);
 
-  if (!node || isCompiling) {
+  const shouldShowFetching =
+    showFetching || isLoading || !node || isCompiling || showFetching;
+
+  if (shouldShowFetching) {
     return (
       <PreparingData
-        isPluginsLoading={!node}
+        isPluginsLoading={!isLoading}
         isProjectLoading={!node}
         isCompiling={isCompiling || !compiledData}
       />
