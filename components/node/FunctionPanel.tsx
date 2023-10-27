@@ -3,21 +3,24 @@ import {
   FunctionOnConfiguration,
   ArgumentType,
 } from "@/lib/types";
-import { TfiWrite } from "react-icons/tfi";
+import { SiSolidity } from "react-icons/si";
 import { Button, Input } from "@nextui-org/react";
 import { useState } from "react";
-import { isAddress, isBigInt, isNumber } from "web3-validator";
+import { isAddress } from "web3-validator";
 import Web3 from "web3";
 
 interface FunctionPanelProps {
   no: number;
   fn: FunctionOnConfiguration;
+  calling: boolean;
   onCall: (...args: string[]) => void;
 }
 
 interface ArgumentInputProps {
   arg: FunctionArgument;
   onChange?: (value: string) => void;
+  isInvalid: boolean;
+  setIsInvalid: (value: boolean) => void;
 }
 
 const validator = (type: ArgumentType, value: string): boolean => {
@@ -35,9 +38,13 @@ const validator = (type: ArgumentType, value: string): boolean => {
   return false;
 };
 
-function ArgumentInput({ arg, onChange }: ArgumentInputProps) {
+function ArgumentInput({
+  arg,
+  onChange,
+  isInvalid,
+  setIsInvalid,
+}: ArgumentInputProps) {
   const [value, setValue] = useState<string>();
-  const [isInvalid, setIsInvalid] = useState<boolean>(false);
   const label = `${arg.name} (${arg.type})`;
 
   const onValueChange = (value: string) => {
@@ -69,9 +76,27 @@ function ArgumentInput({ arg, onChange }: ArgumentInputProps) {
   );
 }
 
-export default function FunctionPanel({ no, fn, onCall }: FunctionPanelProps) {
+export default function FunctionPanel({
+  no,
+  fn,
+  onCall,
+  calling,
+}: FunctionPanelProps) {
   const [args, setArgs] = useState<string[]>([]);
-  console.log("args =:", args);
+  const [isInvalids, setIsInvalids] = useState<boolean[]>(
+    args.map(() => false)
+  );
+
+  const onCallValidate = () => {
+    const inValidList = fn.arguments.map((arg, index) => {
+      const value = args[index];
+      const isValid = validator(arg.type, value);
+      return !isValid;
+    });
+    setIsInvalids(inValidList);
+    return;
+  };
+
   return (
     <div key={no} className="grid grid-cols-6 gap-6">
       <div className="text-sm font-extralight leading-6">
@@ -82,10 +107,12 @@ export default function FunctionPanel({ no, fn, onCall }: FunctionPanelProps) {
         <div className="mt-2">
           <Button
             size="sm"
-            startContent={<TfiWrite />}
+            startContent={<SiSolidity />}
             onPress={() => {
+              onCallValidate();
               onCall(...args);
             }}
+            isLoading={calling}
           >
             Call
           </Button>
@@ -97,6 +124,14 @@ export default function FunctionPanel({ no, fn, onCall }: FunctionPanelProps) {
             <ArgumentInput
               key={argIndex}
               arg={arg}
+              isInvalid={isInvalids[argIndex]}
+              setIsInvalid={(isInvalid) => {
+                setIsInvalids((prev) => {
+                  const tmp = [...prev];
+                  tmp[argIndex] = isInvalid;
+                  return tmp;
+                });
+              }}
               onChange={(value) => {
                 setArgs((prev) => {
                   const tmp = [...prev];

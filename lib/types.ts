@@ -36,6 +36,10 @@ export interface Contract {
   updatedAt: string;
 }
 
+export interface ContractWithConverted extends Contract {
+  configurationJson: { [key: string]: any };
+}
+
 export interface Node {
   id: number;
   name: string;

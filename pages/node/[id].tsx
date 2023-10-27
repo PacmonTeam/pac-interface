@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 
 import { useManageNode, useCompileContracts } from "@/lib/useManageNode";
 import {
-  Contract,
+  ContractWithConverted,
   FunctionOnConfiguration,
   ICompileContractInput,
   NodeWithSigner,
@@ -17,10 +17,6 @@ import PreparingData from "@/components/node/PreparingData";
 import FunctionPanel from "@/components/node/FunctionPanel";
 import { useCallContract } from "@/lib/contract/useCallContract";
 import GeneratedWalletSlide from "@/components/node/GeneratedWalletSlide";
-
-interface ContractWithConverted extends Contract {
-  configurationJson: { [key: string]: any };
-}
 
 interface ContractList {
   [address: string]: ContractWithConverted;
@@ -40,7 +36,7 @@ export default function Page() {
   } = useCompileContracts();
   const [selectedContractAddress, setSelectedContractAddress] =
     useState<string>("");
-  const [callContract] = useCallContract();
+  const { call, loading: calling } = useCallContract();
 
   useEffect(() => {
     if (!selectedContractAddress && node) {
@@ -49,7 +45,6 @@ export default function Page() {
     if (node) {
       const convertedNode = node.contracts.reduce<ContractList>(
         (prev, contract) => {
-          console.log("contract.configuration =:", contract.configuration);
           prev[contract.address] = {
             configurationJson: convertYAMLStringToJson(contract.configuration),
             ...contract,
@@ -158,15 +153,10 @@ export default function Page() {
               no={index + 1}
               fn={fn}
               key={index}
+              calling={calling}
               onCall={async (...args) => {
                 if (compiledData) {
-                  await callContract(
-                    compiledData,
-                    selectedContract,
-                    fn,
-                    node,
-                    node.signers[0].address
-                  )(...args);
+                  await call(compiledData, selectedContract, fn, node)(...args);
                 }
               }}
             />

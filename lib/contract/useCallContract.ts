@@ -1,26 +1,30 @@
 import { BASE_API } from "@/config/url";
 import {
-  Contract,
+  ContractWithConverted,
   FunctionOnConfiguration,
   ICompileContractOutput,
-  Node,
+  NodeWithSigner,
 } from "../types";
+import { toast } from "react-toastify";
+import { useState } from "react";
 
 export const useCallContract = () => {
+  const [loading, setLoading] = useState<boolean>(false);
   const callContract =
     (
       compliedContract: ICompileContractOutput,
-      contract: Contract,
+      contract: ContractWithConverted,
       fn: FunctionOnConfiguration,
-      node: Node,
-      callerAddress: string
+      node: NodeWithSigner
     ) =>
     async (...args: string[]) => {
-      const encodedData = compliedContract[
-        contract.name
-      ].contractFactory.interface.encodeFunctionData(fn.name, args);
-      console.log("🚀 turbo ~ file: example.ts:46 ~ encoded:", encodedData);
+      setLoading(true);
+      const tId = toast.loading(`Deleting node "${node.name}"`);
       try {
+        const encodedData = compliedContract[
+          contract.configurationJson.contractName
+        ].contractFactory.interface.encodeFunctionData(fn.name, args);
+
         const response = await fetch(`${BASE_API}/nodes/call`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -28,13 +32,35 @@ export const useCallContract = () => {
             nodeId: node.id,
             contractAddress: contract.address,
             encodedData,
-            callerAddress,
+            callerAddress: node.signers[0].address,
           }),
         });
+
+        if (!response.ok) {
+          throw response;
+        }
         console.log("🚀 call funtion success", response);
-      } catch (error) {
-        console.error("😐 call function fail", error);
+        toast.update(tId, {
+          render: `Node "${node.name}" was deleted!`,
+          type: "success",
+          icon: "🌈",
+          autoClose: 8000,
+          closeOnClick: true,
+          isLoading: false,
+        });
+      } catch (error: any) {
+        console.error("😐 call function fail =:", error);
+        toast.update(tId, {
+          render: `Call function(${fn.name}) fail!`,
+          type: "error",
+          icon: "😐",
+          autoClose: 8000,
+          closeOnClick: true,
+          isLoading: false,
+        });
+      } finally {
+        setLoading(false);
       }
     };
-  return [callContract];
+  return { call: callContract, loading };
 };
