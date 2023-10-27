@@ -16,7 +16,6 @@ const Menus = [
 
 export default function NavbarComponent() {
   const router = useRouter();
-  console.log("use router =:", router.asPath);
   return (
     <Navbar isBordered>
       <NavbarBrand>

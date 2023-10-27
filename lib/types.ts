@@ -1,3 +1,5 @@
+import { ethers } from "ethers";
+// TODO: merge with status below
 export enum Status {
   ACTIVE = "ACTIVE",
   INACTIVE = "INACTIVE",
@@ -13,6 +15,11 @@ export enum TemplateType {
 export enum ScriptType {
   SOLIDITY = "Solidity",
   YAML = "YAML",
+}
+
+export enum ArgumentType {
+  address = "address",
+  uint256 = "uint256",
 }
 
 interface UpsertTemplateRequest {
@@ -48,19 +55,84 @@ export interface Project {
   updatedAt: string;
 }
 
+export interface Contract {
+  id: number;
+  address: string;
+  name: string;
+  script: string;
+  configuration: string;
+  sequence: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ContractWithConverted extends Contract {
+  configurationJson: { [key: string]: any };
+}
+
 export interface Node {
   id: number;
   name: string;
   rpc: string;
   project: Project;
+  contracts: Contract[];
   createdAt: string;
   updatedAt: string;
+}
+
+export interface NodeWithSigner extends Node {
+  signers: { address: string; privateKey: string }[];
+}
+
+export interface FunctionArgument {
+  name: string;
+  type: ArgumentType;
+}
+
+export interface FunctionOnConfiguration {
+  name: string;
+  arguments: FunctionArgument[];
+}
+
+export interface ManageOnConfiguration {
+  manage: {
+    functions: FunctionOnConfiguration[];
+  };
+}
+
+interface TemplateRequest {
+  script: string;
+  configuration: string;
+  sequence: number;
+  status: Status;
 }
 
 export interface CreateProjectResponse {
   // TODO: Fill in if we use or delete
 }
 
+export interface ICompileContractInput {
+  [name: string]: string;
+}
+
+export interface ICompileSource {
+  [name: string]: {
+    content: string;
+  };
+}
+
+export interface ICompileOutputSelection {
+  [name: string]: {
+    [contractName: string]: string[];
+  };
+}
+
+export interface ICompileContractOutput {
+  [name: string]: {
+    bytecode: string;
+    contractFactory: ethers.ContractFactory;
+  };
+}
 export interface ProjectResponse {
   id: number;
   name: string;
