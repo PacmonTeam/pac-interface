@@ -16,6 +16,7 @@ import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 import PreparingData from "@/components/node/PreparingData";
 import FunctionPanel from "@/components/node/FunctionPanel";
 import { useCallContract } from "@/lib/contract/useCallContract";
+import GeneratedWalletSlide from "@/components/node/GeneratedWalletSlide";
 
 interface ContractWithConverted extends Contract {
   configurationJson: { [key: string]: any };
@@ -30,6 +31,7 @@ export default function Page() {
   const nodeId = router.query.id;
   const { data: node, isLoading } = useManageNode<NodeWithSigner>(nodeId);
   const [convertedContract, setConvertedContract] = useState<ContractList>();
+  const [openSlide, setOpenSlide] = useState(false);
   const {
     compile,
     data: compiledData,
@@ -180,12 +182,18 @@ export default function Page() {
         <ManageNodeHeader
           node={node}
           onSelectContract={(address) => setSelectedContractAddress(address)}
+          openSlide={setOpenSlide}
         />
         <div className="px-5 mt-2 flex w-full flex-col">
           {renderContractContent()}
           {renderManageFunctions()}
         </div>
       </div>
+      <GeneratedWalletSlide
+        open={openSlide}
+        setOpen={setOpenSlide}
+        node={node}
+      />
     </div>
   );
 }

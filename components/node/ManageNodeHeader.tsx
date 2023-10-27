@@ -18,11 +18,13 @@ import { SiSolidity } from "react-icons/si";
 interface ManageNodeHeaderProps {
   node: NodeWithSigner;
   onSelectContract: (address: string) => void;
+  openSlide: (value: boolean) => void;
 }
 
 export default function ManageNodeHeader({
   node,
   onSelectContract,
+  openSlide,
 }: ManageNodeHeaderProps) {
   return (
     <>
@@ -77,7 +79,7 @@ export default function ManageNodeHeader({
               </DropdownSection>
             </DropdownMenu>
           </Dropdown>
-          <Button variant="bordered" size="sm">
+          <Button variant="bordered" size="sm" onPress={() => openSlide(true)}>
             Generated Wallets
           </Button>
         </div>

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.17",
     "@nextui-org/react": "^2.1.13",
     "@typescript-eslint/parser": "^6.8.0",
     "@uiw/codemirror-extensions-langs": "^4.21.20",

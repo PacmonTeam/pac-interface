@@ -3,13 +3,13 @@ import "react-toastify/dist/ReactToastify.css";
 
 import type { AppProps } from "next/app";
 
-import { Inter } from "next/font/google";
+import { Roboto_Mono } from "next/font/google";
 import { NextUIProvider } from "@nextui-org/react";
 import { ToastContainer } from "react-toastify";
 import Head from "next/head";
 import Layout from "@/components/Layout";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Roboto_Mono({ subsets: ["latin"] });
 
 export default function RootLayout({ Component, pageProps }: AppProps) {
   return (
