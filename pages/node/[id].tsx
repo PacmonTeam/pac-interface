@@ -177,6 +177,7 @@ export default function Page({
               fn={fn}
               key={index}
               calling={calling}
+              selectedContractAddress={selectedContractAddress}
               onCall={async (...args) => {
                 if (compiledData) {
                   await call(compiledData, selectedContract, fn, node)(...args);

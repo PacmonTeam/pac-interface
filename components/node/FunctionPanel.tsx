@@ -5,7 +5,7 @@ import {
 } from "@/lib/types";
 import { SiSolidity } from "react-icons/si";
 import { Button, Input } from "@nextui-org/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { isAddress } from "web3-validator";
 import Web3 from "web3";
 
@@ -13,14 +13,16 @@ interface FunctionPanelProps {
   no: number;
   fn: FunctionOnConfiguration;
   calling: boolean;
+  selectedContractAddress: string;
   onCall: (...args: string[]) => void;
 }
 
 interface ArgumentInputProps {
-  arg: FunctionArgument;
-  onChange?: (value: string) => void;
   isInvalid: boolean;
+  value: string;
+  arg: FunctionArgument;
   setIsInvalid: (value: boolean) => void;
+  setValue: (value: string) => void;
 }
 
 const validator = (type: ArgumentType, value: string): boolean => {
@@ -40,20 +42,17 @@ const validator = (type: ArgumentType, value: string): boolean => {
 
 function ArgumentInput({
   arg,
-  onChange,
+  value,
+  setValue,
   isInvalid,
   setIsInvalid,
 }: ArgumentInputProps) {
-  const [value, setValue] = useState<string>();
   const label = `${arg.name} (${arg.type})`;
 
   const onValueChange = (value: string) => {
     const isValid = validator(arg.type, value);
     setIsInvalid(!isValid);
     setValue(value);
-    if (onChange) {
-      onChange(value);
-    }
   };
 
   return (
@@ -81,11 +80,28 @@ export default function FunctionPanel({
   fn,
   onCall,
   calling,
+  selectedContractAddress,
 }: FunctionPanelProps) {
   const [args, setArgs] = useState<string[]>([]);
+  const [argValues, setArgValues] = useState<string[]>(args.map(() => ""));
   const [isInvalids, setIsInvalids] = useState<boolean[]>(
     args.map(() => false)
   );
+  const [prevSelectedContractAddress, setPrev] = useState<string>();
+  useEffect(() => {
+    console.log(
+      "selectedContractAddress =",
+      selectedContractAddress,
+      prevSelectedContractAddress,
+      prevSelectedContractAddress !== selectedContractAddress
+    );
+    if (prevSelectedContractAddress !== selectedContractAddress) {
+      const tmpIsInvalids = fn.arguments.map(() => false);
+      setArgs([]);
+      setIsInvalids(tmpIsInvalids);
+      setPrev(selectedContractAddress);
+    }
+  }, [selectedContractAddress]);
 
   const onCallValidate = () => {
     const inValidList = fn.arguments.map((arg, index) => {
@@ -124,6 +140,7 @@ export default function FunctionPanel({
             <ArgumentInput
               key={argIndex}
               arg={arg}
+              value={args[argIndex]}
               isInvalid={isInvalids[argIndex]}
               setIsInvalid={(isInvalid) => {
                 setIsInvalids((prev) => {
@@ -132,7 +149,7 @@ export default function FunctionPanel({
                   return tmp;
                 });
               }}
-              onChange={(value) => {
+              setValue={(value) => {
                 setArgs((prev) => {
                   const tmp = [...prev];
                   tmp[argIndex] = value;
