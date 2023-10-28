@@ -1,8 +1,8 @@
-import { ProjectResponse } from "./types";
+import { Project } from "./types";
 import { TemplateRowProps } from "@/components/template/TemplateRow";
 
 export const getTemplateRowPropsArrayFromProject = (
-  project: ProjectResponse | undefined
+  project: Project | undefined
 ): TemplateRowProps[] => {
   return project
     ? project.templates

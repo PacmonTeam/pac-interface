@@ -10,20 +10,46 @@ import {
   ScriptType,
   Status,
   UpsertProjectRequest,
+  Project,
 } from "@/lib/types";
 import { usePluginTemplateMap } from "@/lib/usePlugins";
-import { useProject } from "@/lib/useProjects";
+import { getProjects } from "@/lib/useProjects";
 import { Button, useDisclosure } from "@nextui-org/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { GetStaticProps, GetStaticPaths, InferGetStaticPropsType } from "next";
 import { AiOutlineSave } from "react-icons/ai";
 import { toast } from "react-toastify";
 import { getTemplateRowPropsArrayFromProject } from "@/lib/TemplateUtils";
+import { getProjectById } from "@/lib/useProject";
+import { mutate } from "swr";
 
-export default function Page() {
+export const getStaticPaths: GetStaticPaths = async () => {
+  const project = await getProjects();
+  const paths = project?.map((project) => {
+    return {
+      params: { id: String(project.id) },
+    };
+  });
+
+  return {
+    paths,
+    fallback: false,
+  };
+};
+
+export const getStaticProps = (async ({ params }) => {
+  const projectId = String(params?.id) || "";
+  const project = await getProjectById(projectId);
+  return { props: { project } };
+}) satisfies GetStaticProps<{
+  project: Project;
+}>;
+
+export default function Page({
+  project,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter();
-  const projectId: number = parseInt(router.query.id?.toString() || "0");
-  const { data: project, mutate } = useProject(projectId);
   const { pluginTemplateMap } = usePluginTemplateMap();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -38,7 +64,10 @@ export default function Page() {
       method: "POST",
       body: JSON.stringify(request),
       headers: { "Content-Type": "application/json" },
-    }).then((response) => response.json());
+    }).then((response) => {
+      mutate(`${BASE_API}/projects/${request.id}`, response, false);
+      return response.json();
+    });
   }
 
   const setScript = (script: string, scriptType: ScriptType, id: string) => {
@@ -115,7 +144,6 @@ export default function Page() {
             closeOnClick: true,
             isLoading: false,
           });
-          mutate(project);
           router.push("/project");
         })
         .catch((reason) => {
