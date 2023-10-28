@@ -3,7 +3,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import type { AppProps } from "next/app";
 
-import { Inter } from "next/font/google";
+import { Roboto_Mono } from "next/font/google";
 import { NextUIProvider } from "@nextui-org/react";
 import { ToastContainer } from "react-toastify";
 import Head from "next/head";
@@ -20,7 +20,7 @@ import { configureChains, createConfig, WagmiConfig } from "wagmi";
 import { publicProvider } from "wagmi/providers/public";
 import { PACMON_CHAIN } from "@/config/url";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Roboto_Mono({ subsets: ["latin"] });
 
 const { chains, publicClient } = configureChains(
   [PACMON_CHAIN],

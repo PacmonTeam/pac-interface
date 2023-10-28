@@ -6,8 +6,14 @@ import { useState } from "react";
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
+const PROJECTS_URL = `${BASE_API}/projects`;
+
+export const getProjects = async (): Promise<Project[]> => {
+  return fetcher(PROJECTS_URL);
+};
+
 export const useProjects = () => {
-  const { data, error, isLoading } = useSwr(`${BASE_API}/projects`, fetcher);
+  const { data, error, isLoading } = useSwr(PROJECTS_URL, fetcher);
 
   if (error) {
     console.error(error);

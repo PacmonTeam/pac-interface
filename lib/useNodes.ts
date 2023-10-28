@@ -1,10 +1,16 @@
 import useSwr, { useSWRConfig } from "swr";
 import { BASE_API } from "@/config/url";
-import { Node } from "./types";
+import { Node, NodeWithSigner } from "./types";
 import { toast } from "react-toastify";
 import { useState } from "react";
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
+
+const NODES_URL = `${BASE_API}/nodes`;
+
+export const getNodes = async (): Promise<NodeWithSigner[]> => {
+  return fetcher(NODES_URL);
+};
 
 export const useNodes = () => {
   const {
@@ -12,7 +18,7 @@ export const useNodes = () => {
     error,
     isLoading,
   }: { data: Node[] | undefined; error: any; isLoading: boolean } = useSwr(
-    `${BASE_API}/nodes`,
+    NODES_URL,
     fetcher
   );
 
