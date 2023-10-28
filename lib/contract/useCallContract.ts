@@ -19,7 +19,7 @@ export const useCallContract = () => {
     ) =>
     async (...args: string[]) => {
       setLoading(true);
-      const tId = toast.loading(`Deleting node "${node.name}"`);
+      const tId = toast.loading(`Calling function "${fn.name}"`);
       try {
         const encodedData = compliedContract[
           contract.configurationJson.contractName
