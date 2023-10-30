@@ -1,5 +1,5 @@
 importScripts(
-  "https://binaries.soliditylang.org/bin/soljson-v0.8.20+commit.a1b79de6.js"
+  "https://binaries.soliditylang.org/bin/soljson-v0.8.19+commit.7dd6d404.js"
 );
 import wrapper from "solc/wrapper";
 
