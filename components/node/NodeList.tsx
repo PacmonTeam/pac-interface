@@ -36,8 +36,8 @@ const NodeItem = (node: NodeItemProps) => {
           </div>
         </div>
       </div>
-      <div className="col-span-2 flex flex-col items-start justify-center">
-        <p className="truncate text-xs leading-6">
+      <div className="col-span-2 flex flex-col items-start justify-center overflow-hidden">
+        <p className="truncate text-xs leading-6 text-ellipsis w-full">
           {node.project.name} Project
         </p>
         <ActiveStatus />
