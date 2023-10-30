@@ -3,7 +3,6 @@ import { useEffect } from "react";
 
 import { abi as PacDemoABI } from "./abi/PacDemo";
 import { abi as PacERC20ABI } from "./abi/PacERC20";
-import { abi as PacPriceFeedABI } from "./abi/PacPriceFeed";
 import { abi as PacUniswapV2PairABI } from "./abi/PacUniswapV2Pair";
 
 interface DemoContract {
@@ -19,7 +18,7 @@ interface PairContract {
   address: `0x${string}`;
 }
 
-interface DemoConfig {
+export interface DemoConfig {
   token0?: `0x${string}`;
   token1?: `0x${string}`;
   pair?: `0x${string}`;
@@ -73,21 +72,15 @@ const useDemoConfig = (demoContract: DemoContract) => {
   };
 };
 
-interface DemoTokenInfo {
-  token0: {
-    name?: string;
-    symbol?: string;
-    decimals?: bigint;
-  };
-  token1: {
-    name?: string;
-    symbol?: string;
-    decimals?: bigint;
-  };
-  pair: {
-    reserve0?: bigint;
-    reserve1?: bigint;
-  };
+export interface DemoIndividualTokenInfo {
+  address: `0x${string}`;
+  name?: string;
+  symbol?: string;
+  decimals?: bigint;
+}
+export interface DemoTokenInfo {
+  token0: DemoIndividualTokenInfo;
+  token1: DemoIndividualTokenInfo;
 }
 
 const useDemoTokenInfo = (demoConfig: DemoConfig) => {
@@ -129,10 +122,6 @@ const useDemoTokenInfo = (demoConfig: DemoConfig) => {
         ...token1Contract,
         functionName: "decimals",
       },
-      {
-        ...pairContract,
-        functionName: "getReserves",
-      },
     ],
   });
   useEffect(() => {
@@ -141,34 +130,30 @@ const useDemoTokenInfo = (demoConfig: DemoConfig) => {
   const result: DemoTokenInfo = data
     ? {
         token0: {
+          address: token0Contract.address,
           name: data[0].result,
           symbol: data[1].result,
           decimals: BigInt(data[2].result || 0),
         },
         token1: {
+          address: token1Contract.address,
           name: data[3].result,
           symbol: data[4].result,
           decimals: BigInt(data[5].result || 0),
         },
-        pair: {
-          reserve0: data[6].result ? BigInt(data[6].result[0]) : undefined,
-          reserve1: data[6].result ? BigInt(data[6].result[1]) : undefined,
-        },
       }
     : {
         token0: {
+          address: "0x",
           name: "",
           symbol: "",
           decimals: 0n,
         },
         token1: {
+          address: "0x",
           name: "",
           symbol: "",
           decimals: 0n,
-        },
-        pair: {
-          reserve0: 0n,
-          reserve1: 0n,
         },
       };
 
@@ -180,7 +165,7 @@ const useDemoTokenInfo = (demoConfig: DemoConfig) => {
   };
 };
 
-interface DemoInfo {
+export interface DemoInfo {
   price0?: bigint;
   price1?: bigint;
   ammPrice0?: bigint;
@@ -260,15 +245,79 @@ const useDemoInfo = (demoContract: DemoContract) => {
   };
 };
 
+export interface TokenData {
+  allowance0?: bigint;
+  allowance1?: bigint;
+  balanceOf0?: bigint;
+  balanceOf1?: bigint;
+}
+
+const useTokenData = (demoContract: DemoContract, demoConfig: DemoConfig) => {
+  const token0Contract: TokenContract = {
+    abi: PacERC20ABI,
+    address: demoConfig.token0 || "0x",
+  };
+  const token1Contract: TokenContract = {
+    abi: PacERC20ABI,
+    address: demoConfig.token1 || "0x",
+  };
+  const account = useAccount();
+  const { data, isError, isLoading, refetch } = useContractReads({
+    staleTime: 1000 * 1,
+    watch: true,
+    contracts: [
+      {
+        ...token0Contract,
+        functionName: "allowance",
+        args: [account.address!, demoContract.address],
+      },
+      {
+        ...token1Contract,
+        functionName: "allowance",
+        args: [account.address!, demoContract.address],
+      },
+      {
+        ...token0Contract,
+        functionName: "balanceOf",
+        args: [account.address!],
+      },
+      {
+        ...token1Contract,
+        functionName: "balanceOf",
+        args: [account.address!],
+      },
+    ],
+  });
+
+  useEffect(() => {
+    refetch();
+  }, [refetch, demoContract.address, account.address]);
+
+  const result: TokenData = data
+    ? {
+        allowance0: data[0].result ? BigInt(data[0].result) : undefined,
+        allowance1: data[1].result ? BigInt(data[1].result) : undefined,
+        balanceOf0: data[2].result ? BigInt(data[2].result) : undefined,
+        balanceOf1: data[3].result ? BigInt(data[3].result) : undefined,
+      }
+    : {};
+
+  return {
+    result,
+    isError,
+    isLoading,
+    refetch,
+  };
+};
+
 export interface DemoData {
   config: DemoConfig;
   tokenInfo: DemoTokenInfo;
   info: DemoInfo;
+  tokenData: TokenData;
 }
 
 export const useDemo = (contractAddress: `0x${string}`) => {
-  const account = useAccount();
-
   const demoContract = {
     abi: PacDemoABI,
     address: contractAddress,
@@ -278,9 +327,12 @@ export const useDemo = (contractAddress: `0x${string}`) => {
   const demoTokenInfo = useDemoTokenInfo(demoConfig.result);
   const demoInfo = useDemoInfo(demoContract);
 
+  const tokenData = useTokenData(demoContract, demoConfig.result);
+
   return {
     config: demoConfig,
     tokenInfo: demoTokenInfo,
     info: demoInfo,
+    tokenData,
   };
 };
