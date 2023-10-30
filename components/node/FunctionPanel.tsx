@@ -4,7 +4,7 @@ import {
   ArgumentType,
 } from "@/lib/types";
 import { SiSolidity } from "react-icons/si";
-import { Button, Input } from "@nextui-org/react";
+import { Button, Checkbox, Input, Switch } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { isAddress } from "web3-validator";
 import Web3 from "web3";
@@ -14,18 +14,18 @@ interface FunctionPanelProps {
   fn: FunctionOnConfiguration;
   calling: boolean;
   selectedContractAddress: string;
-  onCall: (...args: string[]) => void;
+  onCall: (...args: (string | boolean)[]) => void;
 }
 
 interface ArgumentInputProps {
   isInvalid: boolean;
-  value: string;
+  value: string | boolean;
   arg: FunctionArgument;
   setIsInvalid: (value: boolean) => void;
-  setValue: (value: string) => void;
+  setValue: (value: string | boolean) => void;
 }
 
-const validator = (type: ArgumentType, value: string): boolean => {
+const validator = (type: ArgumentType, value: string | boolean): boolean => {
   if (type === ArgumentType.address) {
     return isAddress(value);
   }
@@ -36,6 +36,9 @@ const validator = (type: ArgumentType, value: string): boolean => {
     } catch {
       return false;
     }
+  }
+  if (type === ArgumentType.boolean) {
+    return true;
   }
   return false;
 };
@@ -49,7 +52,7 @@ function ArgumentInput({
 }: ArgumentInputProps) {
   const label = `${arg.name} (${arg.type})`;
 
-  const onValueChange = (value: string) => {
+  const onValueChange = (value: string | boolean) => {
     const isValid = validator(arg.type, value);
     setIsInvalid(!isValid);
     setValue(value);
@@ -62,14 +65,24 @@ function ArgumentInput({
         <span className="text-danger">*</span>
       </div>
       <div className="flex-shrink-0 flex-1">
-        <Input
-          label={label}
-          size="sm"
-          value={value || ""}
-          isInvalid={isInvalid}
-          errorMessage={isInvalid && `invalid argument type (${arg.type})`}
-          onValueChange={onValueChange}
-        />
+        {arg.type === ArgumentType.boolean ? (
+          <Switch
+            size="sm"
+            isSelected={value as boolean}
+            onValueChange={onValueChange}
+          >
+            {value ? "true" : "false"}
+          </Switch>
+        ) : (
+          <Input
+            label={label}
+            size="sm"
+            value={(value as string) || ""}
+            isInvalid={isInvalid}
+            errorMessage={isInvalid && `invalid argument type (${arg.type})`}
+            onValueChange={onValueChange}
+          />
+        )}
       </div>
     </li>
   );
@@ -82,7 +95,7 @@ export default function FunctionPanel({
   calling,
   selectedContractAddress,
 }: FunctionPanelProps) {
-  const [args, setArgs] = useState<string[]>([]);
+  const [args, setArgs] = useState<(string | boolean)[]>([]);
   const [argValues, setArgValues] = useState<string[]>(args.map(() => ""));
   const [isInvalids, setIsInvalids] = useState<boolean[]>(
     args.map(() => false)
