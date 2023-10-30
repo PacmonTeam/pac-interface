@@ -82,7 +82,6 @@ export const useCompileContracts = () => {
     };
     worker.onmessage = (e: any) => {
       const output = e.data.output;
-      console.log("onmessage", e);
       if (output.errors) {
         setError(output.errors[0].message);
         return;

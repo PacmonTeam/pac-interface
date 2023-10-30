@@ -102,12 +102,6 @@ export default function FunctionPanel({
   );
   const [prevSelectedContractAddress, setPrev] = useState<string>();
   useEffect(() => {
-    console.log(
-      "selectedContractAddress =",
-      selectedContractAddress,
-      prevSelectedContractAddress,
-      prevSelectedContractAddress !== selectedContractAddress
-    );
     if (prevSelectedContractAddress !== selectedContractAddress) {
       const tmpIsInvalids = fn.arguments.map(() => false);
       setArgs([]);

@@ -39,7 +39,6 @@ export const useCallContract = () => {
         if (!response.ok) {
           throw response;
         }
-        console.log("🚀 call function success", response);
         toast.update(tId, {
           render: `Call function "${fn.name}" success!`,
           type: "success",
