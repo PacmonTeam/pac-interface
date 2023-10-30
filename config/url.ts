@@ -3,7 +3,7 @@ import { Chain } from "@rainbow-me/rainbowkit";
 export const BASE_API = "https://o.pacmon.suijin.xyz/api";
 
 export const PACMON_CHAIN: Chain = {
-  id: 31337,
+  id: 1337,
   name: "Pacmon",
   network: "pacmon",
   iconUrl: "https://example.com/icon.svg",
