@@ -20,6 +20,7 @@ export enum ScriptType {
 export enum ArgumentType {
   address = "address",
   uint256 = "uint256",
+  boolean = "boolean",
 }
 
 interface UpsertTemplateRequest {
