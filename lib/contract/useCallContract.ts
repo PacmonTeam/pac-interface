@@ -17,7 +17,7 @@ export const useCallContract = () => {
       fn: FunctionOnConfiguration,
       node: NodeWithSigner
     ) =>
-    async (...args: string[]) => {
+    async (...args: (string | boolean)[]) => {
       setLoading(true);
       const tId = toast.loading(`Calling function "${fn.name}"`);
       try {
