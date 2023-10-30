@@ -1,4 +1,6 @@
 import { Snippet } from "@nextui-org/react";
+import ErrorPage from "next/error";
+import { useRouter } from "next/router";
 
 import { useEffect, useState } from "react";
 import { GetStaticProps, GetStaticPaths, InferGetStaticPropsType } from "next";
@@ -34,13 +36,14 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
   return {
     paths,
-    fallback: false,
+    fallback: true,
   };
 };
 
 export const getStaticProps = (async ({ params }) => {
   const nodeId = String(params?.id) || "";
   const node = await getManageNodeById(nodeId);
+
   return { props: { node } };
 }) satisfies GetStaticProps<{
   node: NodeWithSigner;
@@ -51,6 +54,7 @@ export default function Page({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const [convertedContract, setConvertedContract] = useState<ContractList>();
   const [openSlide, setOpenSlide] = useState(false);
+  const router = useRouter();
   const {
     compile,
     data: compiledData,
@@ -62,10 +66,10 @@ export default function Page({
   const { call, loading: calling } = useCallContract();
 
   useEffect(() => {
-    if (!selectedContractAddress && node) {
+    if (!selectedContractAddress && node?.id) {
       setSelectedContractAddress(node.contracts[0]?.address);
     }
-    if (node) {
+    if (node?.id) {
       const convertedNode = node.contracts.reduce<ContractList>(
         (prev, contract) => {
           prev[contract.address] = {
@@ -95,11 +99,20 @@ export default function Page({
     })();
   }, [convertedContract]);
 
-  if (!node || isCompiling) {
+  if (!router.isFallback && !node?.id) {
+    return (
+      <ErrorPage
+        statusCode={404}
+        title={`Node (ID=${router.query.id?.toString()}) could not be found. Please check your Node ID`}
+      />
+    );
+  }
+
+  if (!node?.id || isCompiling) {
     return (
       <PreparingData
-        isPluginsLoading={!node}
-        isProjectLoading={!node}
+        isPluginsLoading={!node?.id}
+        isProjectLoading={!node?.id}
         isCompiling={isCompiling || !compiledData}
       />
     );

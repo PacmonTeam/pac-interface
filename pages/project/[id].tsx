@@ -16,6 +16,7 @@ import { usePluginTemplateMap } from "@/lib/usePlugins";
 import { getProjects } from "@/lib/useProjects";
 import { Button, useDisclosure } from "@nextui-org/react";
 import { useRouter } from "next/router";
+import ErrorPage from "next/error";
 import { useState } from "react";
 import { GetStaticProps, GetStaticPaths, InferGetStaticPropsType } from "next";
 import { AiOutlineSave } from "react-icons/ai";
@@ -34,7 +35,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
   return {
     paths,
-    fallback: false,
+    fallback: true,
   };
 };
 
@@ -58,6 +59,15 @@ export default function Page({
     []
   );
   const [isLoading, setIsLoading] = useState(false);
+
+  if (!router.isFallback && !project?.id) {
+    return (
+      <ErrorPage
+        statusCode={404}
+        title={`Project (ID=${router.query.id?.toString()}) could not be found. Please check your Project ID`}
+      />
+    );
+  }
 
   async function updateProject(request: UpsertProjectRequest) {
     return fetch(`${BASE_API}/projects/update`, {
