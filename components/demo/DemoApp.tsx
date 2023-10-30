@@ -1,8 +1,9 @@
 import { Input, Skeleton } from "@nextui-org/react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useMemo, useState } from "react";
-import { Address, useAccount } from "wagmi";
+import { Address, useAccount, useBlockNumber } from "wagmi";
 import { isAddress } from "web3-validator";
+import { GoDotFill } from "react-icons/go";
 import { DemoData, useDemo } from "./useDemo";
 
 interface DemoDataDisplayProps {
@@ -55,6 +56,7 @@ export default function DemoApp() {
   const [contractAddress, setContractAddress] = useState<string>("");
 
   const account = useAccount();
+  const blockNumber = useBlockNumber();
 
   const addressInvalid = useMemo(
     () => contractAddressTouched && !isAddress(contractAddress),
@@ -73,6 +75,18 @@ export default function DemoApp() {
         <ConnectButton />
       </div>
 
+      <div className="fixed top-[72px] right-[12px] text-xs">
+        {blockNumber.data ? (
+          <div className="flex text-success-500 items-center">
+            <GoDotFill className="mt-[2px] mr-1" /> block{" "}
+            {blockNumber.data.toString()}
+          </div>
+        ) : (
+          <div className="flex text-warning-500 items-center">
+            <GoDotFill className="mt-[2px] mr-1" /> no block
+          </div>
+        )}
+      </div>
       <div className="flex w-full justify-center max-w-lg mt-4 mb-16">
         <Input
           label="PacDemo Contact Address"
