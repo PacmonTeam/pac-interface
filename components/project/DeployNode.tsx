@@ -91,7 +91,7 @@ export default function DeployNode({ project, nodeType }: DeployNode) {
                       Node Type
                     </div>
                     <div className="text-sm leading-6 text-default-500 col-span-2 mt-0">
-                      CPU: 1core / RAM: 1 GB
+                      25 GB SSD / 4 TB Transfer
                     </div>
                   </div>
                   <div className="grid grid-cols-3 gap-4 px-0">

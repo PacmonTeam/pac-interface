@@ -113,9 +113,12 @@ function ProjectCard({ project }: ProjectCardProps) {
                   <SelectItem
                     key={node.id}
                     value={node.id}
-                    textValue={`CPU: ${node.CPU} RAM: ${node.RAM}`}
+                    textValue={`${node.Storage} ${
+                      node.isSSD ? `SSD` : `Disk`
+                    } / ${node.Transfer} Transfer`}
                   >
-                    CPU: {node.CPU} RAM: {node.RAM}
+                    {node.Storage} {node.isSSD ? `SSD` : `Disk`} /{" "}
+                    {node.Transfer} Transfer
                   </SelectItem>
                 ))}
               </Select>
