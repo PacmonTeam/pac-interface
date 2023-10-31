@@ -1,4 +1,5 @@
 import {
+  Avatar,
   Card,
   CardBody,
   Select,
@@ -14,7 +15,6 @@ import { useProjects, useDeleteProject } from "@/lib/useProjects";
 
 import { formatDate } from "@/lib/formatDate";
 import { AVAILABLE_NODES } from "@/lib/constants";
-import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 
 import Link from "next/link";
 import { Project } from "@/lib/types";
@@ -68,7 +68,7 @@ function ProjectCard({ project }: ProjectCardProps) {
         <div className="grid grid-cols-12">
           <div className="flex flex-col col-span-8 gap-4">
             <div className="flex flex-row gap-4">
-              <Jazzicon diameter={40} seed={jsNumberForAddress(project.name)} />
+              <Avatar name={project.name} size="md" isBordered />
               <div className="flex flex-col">
                 <h3 className="font-semibold text-foreground/90">
                   {project.name}
