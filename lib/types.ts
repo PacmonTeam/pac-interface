@@ -9,7 +9,7 @@ export enum TemplateType {
   ERC_20 = "ERC-20 Token",
   UNISWAP_V2 = "Uniswap V2 Pair",
   PRICE_FEED = "Price Feed",
-  CUSTOM = "custom",
+  CUSTOM = "Custom",
 }
 
 export enum ScriptType {
