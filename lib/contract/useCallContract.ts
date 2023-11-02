@@ -5,7 +5,6 @@ import {
   ICompileContractOutput,
   NodeWithSigner,
 } from "../types";
-import { toast } from "react-toastify";
 import { useState } from "react";
 
 export const useCallContract = () => {
@@ -19,7 +18,6 @@ export const useCallContract = () => {
     ) =>
     async (...args: (string | boolean)[]) => {
       setLoading(true);
-      const tId = toast.loading(`Calling function "${fn.name}"`);
       try {
         const encodedData = compliedContract[
           contract.configurationJson.contractName
@@ -39,24 +37,9 @@ export const useCallContract = () => {
         if (!response.ok) {
           throw response;
         }
-        toast.update(tId, {
-          render: `Call function "${fn.name}" success!`,
-          type: "success",
-          icon: "🌈",
-          autoClose: 8000,
-          closeOnClick: true,
-          isLoading: false,
-        });
+        return response.json();
       } catch (error: any) {
         console.error("😐 call function fail =:", error);
-        toast.update(tId, {
-          render: `Call function(${fn.name}) fail!`,
-          type: "error",
-          icon: "😐",
-          autoClose: 8000,
-          closeOnClick: true,
-          isLoading: false,
-        });
       } finally {
         setLoading(false);
       }

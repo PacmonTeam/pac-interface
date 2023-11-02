@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { GetStaticProps, GetStaticPaths, InferGetStaticPropsType } from "next";
 import { TbFaceIdError } from "react-icons/tb";
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
+import { toast } from "react-toastify";
+import { Link } from "@nextui-org/react";
 
 import { useCompileContracts, getManageNodeById } from "@/lib/useManageNode";
 import {
@@ -48,6 +50,31 @@ export const getStaticProps = (async ({ params }) => {
 }) satisfies GetStaticProps<{
   node: NodeWithSigner;
 }>;
+
+const ToastFeedBack = ({
+  message,
+  txHash,
+}: {
+  message: string;
+  txHash?: string;
+}) => {
+  return (
+    <div className="flex flex-col">
+      <div className="font-light ">{message}</div>
+      {txHash && (
+        <Link
+          size="sm"
+          isExternal
+          color="success"
+          href={`https://explorer.pacmon.suijin.xyz/tx/${txHash}`}
+          showAnchorIcon
+        >
+          View on explorer
+        </Link>
+      )}
+    </div>
+  );
+};
 
 export default function Page({
   node,
@@ -193,7 +220,43 @@ export default function Page({
               selectedContractAddress={selectedContractAddress}
               onCall={async (...args) => {
                 if (compiledData) {
-                  await call(compiledData, selectedContract, fn, node)(...args);
+                  const tId = toast.loading(`Calling function "${fn.name}"`);
+                  try {
+                    const result = await call(
+                      compiledData,
+                      selectedContract,
+                      fn,
+                      node
+                    )(...args);
+                    const txHash = result.txHash;
+                    toast.update(tId, {
+                      render: (
+                        <ToastFeedBack
+                          message={`Call function "${fn.name}" success!`}
+                          txHash={txHash}
+                        />
+                      ),
+                      type: "success",
+                      icon: "🌈",
+                      autoClose: 8000,
+                      closeOnClick: true,
+                      isLoading: false,
+                    });
+                  } catch (error) {
+                    console.error("😐 call function fail =:", error);
+                    toast.update(tId, {
+                      render: (
+                        <ToastFeedBack
+                          message={`Call function(${fn.name}) fail!`}
+                        />
+                      ),
+                      type: "error",
+                      icon: "😐",
+                      autoClose: 8000,
+                      closeOnClick: true,
+                      isLoading: false,
+                    });
+                  }
                 }
               }}
             />
