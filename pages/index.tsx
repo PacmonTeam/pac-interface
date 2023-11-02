@@ -10,7 +10,7 @@ export default function Home() {
 
   return (
     <div className="flex w-full justify-center">
-      <div className="container max-w-[1024px] gap-4 relative self-center">
+      <div className="container max-w-[1024px] gap-4 text-center font-light text-lg text-default-500">
         🚦 Redirecting...
       </div>
     </div>

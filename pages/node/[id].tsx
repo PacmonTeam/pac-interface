@@ -4,8 +4,13 @@ import { useRouter } from "next/router";
 
 import { useEffect, useState } from "react";
 import { GetStaticProps, GetStaticPaths, InferGetStaticPropsType } from "next";
+
 import { TbFaceIdError } from "react-icons/tb";
+import { FiExternalLink } from "react-icons/fi";
+
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
+import { toast } from "react-toastify";
+import { Link, Button } from "@nextui-org/react";
 
 import { useCompileContracts, getManageNodeById } from "@/lib/useManageNode";
 import {
@@ -48,6 +53,31 @@ export const getStaticProps = (async ({ params }) => {
 }) satisfies GetStaticProps<{
   node: NodeWithSigner;
 }>;
+
+const ToastFeedBack = ({
+  message,
+  txHash,
+}: {
+  message: string;
+  txHash?: string;
+}) => {
+  return (
+    <div className="flex flex-col">
+      <div className="font-light ">{message}</div>
+      {txHash && (
+        <Link
+          size="sm"
+          isExternal
+          color="success"
+          href={`https://explorer.pacmon.suijin.xyz/tx/${txHash}`}
+          showAnchorIcon
+        >
+          View on explorer
+        </Link>
+      )}
+    </div>
+  );
+};
 
 export default function Page({
   node,
@@ -148,9 +178,16 @@ export default function Page({
           </span>
         </div>
         <div className="flex flex-col items-end">
-          <span className="text-xs font-light mb-1 text-default-500">
-            Contract Address
-          </span>
+          <div className="flex flex-row mb-1 text-default-500">
+            <div className="text-xs font-light mr-1">Contract Address</div>
+            <Link
+              size="sm"
+              isExternal
+              color="foreground"
+              showAnchorIcon
+              href={`https://explorer.pacmon.suijin.xyz/address/${selectedContract.address}`}
+            />
+          </div>
           <Snippet size="sm" symbol=" ">
             {selectedContract.address}
           </Snippet>
@@ -193,7 +230,43 @@ export default function Page({
               selectedContractAddress={selectedContractAddress}
               onCall={async (...args) => {
                 if (compiledData) {
-                  await call(compiledData, selectedContract, fn, node)(...args);
+                  const tId = toast.loading(`Calling function "${fn.name}"`);
+                  try {
+                    const result = await call(
+                      compiledData,
+                      selectedContract,
+                      fn,
+                      node
+                    )(...args);
+                    const txHash = result.txHash;
+                    toast.update(tId, {
+                      render: (
+                        <ToastFeedBack
+                          message={`Call function "${fn.name}" success!`}
+                          txHash={txHash}
+                        />
+                      ),
+                      type: "success",
+                      icon: "🌈",
+                      autoClose: 8000,
+                      closeOnClick: true,
+                      isLoading: false,
+                    });
+                  } catch (error) {
+                    console.error("😐 call function fail =:", error);
+                    toast.update(tId, {
+                      render: (
+                        <ToastFeedBack
+                          message={`Call function(${fn.name}) fail!`}
+                        />
+                      ),
+                      type: "error",
+                      icon: "😐",
+                      autoClose: 8000,
+                      closeOnClick: true,
+                      isLoading: false,
+                    });
+                  }
                 }
               }}
             />
