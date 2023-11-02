@@ -4,10 +4,13 @@ import { useRouter } from "next/router";
 
 import { useEffect, useState } from "react";
 import { GetStaticProps, GetStaticPaths, InferGetStaticPropsType } from "next";
+
 import { TbFaceIdError } from "react-icons/tb";
+import { FiExternalLink } from "react-icons/fi";
+
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 import { toast } from "react-toastify";
-import { Link } from "@nextui-org/react";
+import { Link, Button } from "@nextui-org/react";
 
 import { useCompileContracts, getManageNodeById } from "@/lib/useManageNode";
 import {
@@ -175,9 +178,16 @@ export default function Page({
           </span>
         </div>
         <div className="flex flex-col items-end">
-          <span className="text-xs font-light mb-1 text-default-500">
-            Contract Address
-          </span>
+          <div className="flex flex-row mb-1 text-default-500">
+            <div className="text-xs font-light mr-1">Contract Address</div>
+            <Link
+              size="sm"
+              isExternal
+              color="foreground"
+              showAnchorIcon
+              href={`https://explorer.pacmon.suijin.xyz/address/${selectedContract.address}`}
+            />
+          </div>
           <Snippet size="sm" symbol=" ">
             {selectedContract.address}
           </Snippet>
