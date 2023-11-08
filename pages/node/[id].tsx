@@ -57,7 +57,7 @@ export default function Page() {
   const [convertedContract, setConvertedContract] = useState<ContractList>();
   const [openSlide, setOpenSlide] = useState(false);
   const router = useRouter();
-  const nodeId = String(router.query?.id) || "";
+  const nodeId = String(router.query?.id || "0");
   const {
     data: node,
     isLoading,
@@ -108,21 +108,20 @@ export default function Page() {
     })();
   }, [convertedContract]);
 
-  if (!node?.id || isLoading || isCompiling) {
-    return (
-      <PreparingData
-        isPluginsLoading={isLoading}
-        isProjectLoading={!node?.id}
-        isCompiling={isCompiling || !compiledData}
-      />
-    );
-  }
-
-  if (!node?.id) {
+  if (!node?.id && !isLoading && nodeId !== "0") {
     return (
       <ErrorPage
         statusCode={404}
         title={`Node (ID=${router.query.id?.toString()}) could not be found. Please check your Node ID`}
+      />
+    );
+  }
+  if (nodeId === "0" || isLoading || isCompiling) {
+    return (
+      <PreparingData
+        isPluginsLoading={nodeId === "0"}
+        isProjectLoading={!node?.id || isLoading}
+        isCompiling={isCompiling || !compiledData}
       />
     );
   }

@@ -24,18 +24,18 @@ export default function PreparingData({
       <div className="flex gap-2 flex-col w-52">
         <div className="flex flex-row items-center gap-2 text-default-500">
           <div className="items-center justify-center w-5">
-            {renderIcon(isProjectLoading)}
-          </div>
-          <div className="items-center">
-            Fetching <span className="font-bold">Project</span>
-          </div>
-        </div>
-        <div className="flex flex-row items-center gap-2 text-default-500">
-          <div className="items-center justify-center w-5">
             {renderIcon(isPluginsLoading)}
           </div>
           <div className="items-center">
             Fetching <span className="font-bold">Plugins</span>
+          </div>
+        </div>
+        <div className="flex flex-row items-center gap-2 text-default-500">
+          <div className="items-center justify-center w-5">
+            {renderIcon(isProjectLoading)}
+          </div>
+          <div className="items-center">
+            Fetching <span className="font-bold">Project</span>
           </div>
         </div>
         <div className="flex flex-row items-center gap-2 text-default-500">
