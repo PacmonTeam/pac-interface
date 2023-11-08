@@ -3,16 +3,14 @@ import ErrorPage from "next/error";
 import { useRouter } from "next/router";
 
 import { useEffect, useState } from "react";
-import { GetStaticProps, GetStaticPaths, InferGetStaticPropsType } from "next";
 
 import { TbFaceIdError } from "react-icons/tb";
-import { FiExternalLink } from "react-icons/fi";
 
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 import { toast } from "react-toastify";
-import { Link, Button } from "@nextui-org/react";
+import { Link } from "@nextui-org/react";
 
-import { useCompileContracts, getManageNodeById } from "@/lib/useManageNode";
+import { useCompileContracts, useManageNode } from "@/lib/useManageNode";
 import {
   ContractWithConverted,
   FunctionOnConfiguration,
@@ -25,34 +23,10 @@ import PreparingData from "@/components/node/PreparingData";
 import FunctionPanel from "@/components/node/FunctionPanel";
 import { useCallContract } from "@/lib/contract/useCallContract";
 import GeneratedWalletSlide from "@/components/node/GeneratedWalletSlide";
-import { getNodes } from "@/lib/useNodes";
 
 interface ContractList {
   [address: string]: ContractWithConverted;
 }
-
-export const getStaticPaths: GetStaticPaths = async () => {
-  const nodes = await getNodes();
-  const paths = nodes?.map((node) => {
-    return {
-      params: { id: String(node.id) },
-    };
-  });
-
-  return {
-    paths,
-    fallback: true,
-  };
-};
-
-export const getStaticProps = (async ({ params }) => {
-  const nodeId = String(params?.id) || "";
-  const node = await getManageNodeById(nodeId);
-
-  return { props: { node } };
-}) satisfies GetStaticProps<{
-  node: NodeWithSigner;
-}>;
 
 const ToastFeedBack = ({
   message,
@@ -79,12 +53,17 @@ const ToastFeedBack = ({
   );
 };
 
-export default function Page({
-  node,
-}: InferGetStaticPropsType<typeof getStaticProps>) {
+export default function Page() {
   const [convertedContract, setConvertedContract] = useState<ContractList>();
   const [openSlide, setOpenSlide] = useState(false);
   const router = useRouter();
+  const nodeId = String(router.query?.id) || "";
+  const {
+    data: node,
+    isLoading,
+    error: nodeDataError,
+  } = useManageNode<NodeWithSigner>(nodeId);
+
   const {
     compile,
     data: compiledData,
@@ -129,7 +108,17 @@ export default function Page({
     })();
   }, [convertedContract]);
 
-  if (!router.isFallback && !node?.id) {
+  if (!node?.id || isLoading || isCompiling) {
+    return (
+      <PreparingData
+        isPluginsLoading={isLoading}
+        isProjectLoading={!node?.id}
+        isCompiling={isCompiling || !compiledData}
+      />
+    );
+  }
+
+  if (!node?.id) {
     return (
       <ErrorPage
         statusCode={404}
@@ -138,15 +127,6 @@ export default function Page({
     );
   }
 
-  if (!node?.id || isCompiling) {
-    return (
-      <PreparingData
-        isPluginsLoading={!node?.id}
-        isProjectLoading={!node?.id}
-        isCompiling={isCompiling || !compiledData}
-      />
-    );
-  }
   const renderContractContent = () => {
     if (!convertedContract || node.contracts?.length === 0) {
       return (

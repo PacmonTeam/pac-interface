@@ -10,46 +10,18 @@ import {
   ScriptType,
   Status,
   UpsertProjectRequest,
-  Project,
 } from "@/lib/types";
 import { usePluginTemplateMap } from "@/lib/usePlugins";
-import { getProjects } from "@/lib/useProjects";
-import { Button, useDisclosure } from "@nextui-org/react";
+import { Button, useDisclosure, Spinner } from "@nextui-org/react";
 import { useRouter } from "next/router";
 import ErrorPage from "next/error";
 import { useState } from "react";
-import { GetStaticProps, GetStaticPaths, InferGetStaticPropsType } from "next";
 import { AiOutlineSave } from "react-icons/ai";
 import { toast } from "react-toastify";
 import { getTemplateRowPropsArrayFromProject } from "@/lib/TemplateUtils";
-import { getProjectById } from "@/lib/useProject";
-import { mutate } from "swr";
+import { useProject } from "@/lib/useProject";
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const project = await getProjects();
-  const paths = project?.map((project) => {
-    return {
-      params: { id: String(project.id) },
-    };
-  });
-
-  return {
-    paths,
-    fallback: true,
-  };
-};
-
-export const getStaticProps = (async ({ params }) => {
-  const projectId = String(params?.id) || "";
-  const project = await getProjectById(projectId);
-  return { props: { project } };
-}) satisfies GetStaticProps<{
-  project: Project;
-}>;
-
-export default function Page({
-  project,
-}: InferGetStaticPropsType<typeof getStaticProps>) {
+export default function Page() {
   const router = useRouter();
   const { pluginTemplateMap } = usePluginTemplateMap();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -60,7 +32,19 @@ export default function Page({
   );
   const [isLoading, setIsLoading] = useState(false);
 
-  if (!router.isFallback && !project?.id) {
+  const projectId: number = parseInt(router.query.id?.toString() || "0");
+  const {
+    data: project,
+    isLoading: isProjectLoading,
+    error: projectDataError,
+    mutate,
+  } = useProject(projectId);
+
+  if (isProjectLoading || projectId === 0) {
+    return <Spinner color="default" />;
+  }
+
+  if (!project?.id) {
     return (
       <ErrorPage
         statusCode={404}
@@ -74,10 +58,14 @@ export default function Page({
       method: "POST",
       body: JSON.stringify(request),
       headers: { "Content-Type": "application/json" },
-    }).then((response) => {
-      mutate(`${BASE_API}/projects/${request.id}`, response, false);
-      return response.json();
-    });
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((project) => {
+        mutate(project);
+        return project;
+      });
   }
 
   const setScript = (script: string, scriptType: ScriptType, id: string) => {
