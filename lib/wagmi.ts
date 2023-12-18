@@ -2,6 +2,7 @@ import { getDefaultWallets } from "@rainbow-me/rainbowkit";
 import { configureChains, createConfig } from "wagmi";
 import { publicProvider } from "wagmi/providers/public";
 import { PACMON_CHAIN } from "@/config/url";
+import { createTestConfig } from "@/e2e/utils";
 
 const { chains, publicClient } = configureChains(
   [PACMON_CHAIN],
@@ -14,10 +15,12 @@ const { connectors } = getDefaultWallets({
   chains,
 });
 
-export const wagmiConfig = createConfig({
-  autoConnect: true,
-  connectors,
-  publicClient,
-});
+export const wagmiConfig = process.env.NEXT_PUBLIC_PLAYWRIGHT_TESTING
+  ? createTestConfig()
+  : createConfig({
+      autoConnect: true,
+      connectors,
+      publicClient,
+    });
 
 export { chains };

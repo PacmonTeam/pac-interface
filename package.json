@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start -H 0.0.0.0 -p ${PORT:-8080}",
     "lint": "next lint",
-    "e2e": "TESTING=true playwright test"
+    "e2e": "NEXT_PUBLIC_PLAYWRIGHT_TESTING=true playwright test"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.17",
@@ -41,6 +41,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.40.1",
+    "@testing-library/react": "^14.1.2",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
