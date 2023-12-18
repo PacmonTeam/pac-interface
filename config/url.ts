@@ -1,7 +1,6 @@
 import { Chain } from "@rainbow-me/rainbowkit";
 
 export const BASE_API = "https://o.pacmon.suijin.xyz/api";
-
 export const PACMON_CHAIN: Chain = {
   id: 1337,
   name: "Pacmon",
@@ -26,9 +25,8 @@ export const PACMON_CHAIN: Chain = {
 };
 
 // export const BASE_API = "http://localhost:3033";
-
 // export const PACMON_CHAIN: Chain = {
-//   id: 31337,
+//   id: 1337,
 //   name: "Pacmon",
 //   network: "pacmon",
 //   iconUrl: "https://example.com/icon.svg",
@@ -39,12 +37,12 @@ export const PACMON_CHAIN: Chain = {
 //     symbol: "PAC",
 //   },
 //   rpcUrls: {
-//     public: { http: ["http://localhost:8545/"] },
-//     default: { http: ["http://localhost:8545/"] },
+//     public: { http: ["http://localhost:8545"] },
+//     default: { http: ["http://localhost:8545"] },
 //   },
 //   blockExplorers: {
-//     default: { name: "PacmonScan", url: "https://etherscan.io" },
-//     etherscan: { name: "PacmonScan", url: "https://etherscan.io" },
+//     default: { name: "PacmonScan", url: "http://localhost:5100" },
+//     etherscan: { name: "PacmonScan", url: "http://localhost:5100" },
 //   },
 //   contracts: {},
 //   testnet: true,
