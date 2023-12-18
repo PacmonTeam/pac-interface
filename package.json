@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start -H 0.0.0.0 -p ${PORT:-8080}",
     "lint": "next lint",
-    "e2e": "playwright test"
+    "e2e": "TESTING=true playwright test"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.17",
