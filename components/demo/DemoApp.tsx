@@ -203,19 +203,23 @@ const DemoTokenBox = ({
         <tr>
           <td className="pr-4">Oracle Price: </td>
           <td>
-            <b>${formatBigInt(price, PRICE_PRECISION)}</b>
+            <b data-testid={`oracle-price-${baseTokenInfo.symbol}`}>
+              ${formatBigInt(price, PRICE_PRECISION)}
+            </b>
           </td>
         </tr>
         <tr>
           <td className="pr-4">AMM Price: </td>
           <td>
-            <b>${formatBigInt(ammPrice * quotePrice, PRICE_PRECISION * 2)}</b>
+            <b data-testid={`amm-price-${baseTokenInfo.symbol}`}>
+              ${formatBigInt(ammPrice * quotePrice, PRICE_PRECISION * 2)}
+            </b>
           </td>
         </tr>
         <tr>
           <td className="pr-4">Deposited Balance: </td>
           <td>
-            <b>
+            <b data-testid={`deposited-balance-${baseTokenInfo.symbol}`}>
               {formatBigInt(balance, Number(baseTokenInfo.decimals))} {bSymbol}
             </b>
           </td>
@@ -223,7 +227,9 @@ const DemoTokenBox = ({
         <tr>
           <td className="pr-4">Deposited Value: </td>
           <td>
-            <b>${formatBigInt(value, PRICE_PRECISION)}</b>
+            <b data-testid={`deposited-value-${baseTokenInfo.symbol}`}>
+              ${formatBigInt(value, PRICE_PRECISION)}
+            </b>
           </td>
         </tr>
       </table>

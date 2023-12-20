@@ -55,14 +55,40 @@ test.describe("demo", () => {
 
     test("deposit enabled", async ({ page }) => {
       await expect(page.getByText("Deposit Disabled")).toBeVisible();
-      await pacmon.enableDeposit();
+      expect(await pacmon.enableDeposit()).not.toThrow();
       await expect(page.getByText("Deposit Enabled")).toBeVisible();
     });
 
     test("withdraw enabled", async ({ page }) => {
       await expect(page.getByText("Withdraw Disabled")).toBeVisible();
-      await pacmon.enableWithdraw();
+      expect(await pacmon.enableWithdraw()).not.toThrow();
       await expect(page.getByText("Withdraw Enabled")).toBeVisible();
+    });
+  });
+
+  test.describe("deposit", () => {
+    test.beforeEach(async ({ page }) => {
+      await pacmon.enableDeposit();
+      await pacmon.enableWithdraw();
+      await page
+        .getByLabel("PacDemo Contact Address")
+        .fill(pacmon.contracts.demo);
+    });
+
+    test("initial values", async ({ page }) => {
+      await expect(page.getByTestId("oracle-price-tBTC")).toHaveText("$35,000");
+      await expect(page.getByTestId("amm-price-tBTC")).toHaveText("$35,000");
+      await expect(page.getByTestId("deposited-balance-tBTC")).toHaveText(
+        "0 tBTC"
+      );
+      await expect(page.getByTestId("deposited-value-tBTC")).toHaveText("$0");
+
+      await expect(page.getByTestId("oracle-price-tUSDC")).toHaveText("$1");
+      await expect(page.getByTestId("amm-price-tUSDC")).toHaveText("$1");
+      await expect(page.getByTestId("deposited-balance-tUSDC")).toHaveText(
+        "0 tUSDC"
+      );
+      await expect(page.getByTestId("deposited-value-tUSDC")).toHaveText("$0");
     });
   });
 });
