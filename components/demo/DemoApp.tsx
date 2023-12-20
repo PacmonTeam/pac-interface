@@ -421,9 +421,7 @@ const DemoInteraction = (props: DemoInteractionProps) => {
 export default function DemoApp() {
   const [contractAddressTouched, setContractAddressTouched] =
     useState<boolean>(false);
-  const [contractAddress, setContractAddress] = useState<string>(
-    "0xa5dDBd1D4e7A680eB09dCd28bb21C86f910540B9"
-  );
+  const [contractAddress, setContractAddress] = useState<string>("");
 
   const account = useAccount();
   const blockNumber = useBlockNumber();
