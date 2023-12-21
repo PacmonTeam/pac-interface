@@ -9,7 +9,9 @@ test("has title", async ({ page }) => {
 });
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3033";
-const PROJECT_ID = Number(process.env.NEXT_PUBLIC_PROJECT_ID || "24");
+const PROJECT_ID = Number(
+  process.env.NEXT_PUBLIC_PLAYWRIGHT_PROJECT_ID || "24"
+);
 
 test("can connect wallet", async ({ page }) => {
   await page.goto("./demo");

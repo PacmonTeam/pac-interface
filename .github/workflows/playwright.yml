@@ -18,7 +18,13 @@ jobs:
     - name: Install Playwright Browsers
       run: yarn playwright install --with-deps
     - name: Run Playwright tests
-      run: yarn playwright test
+      run: yarn playwright e2e
+      env:
+        NEXT_PUBLIC_RPC: https://o.pacmon.suijin.xyz/rpc/
+        NEXT_PUBLIC_EXPLORER: https://o.pacmon.suijin.xyz/explorer
+        NEXT_PUBLIC_API_URL: https://o.pacmon.suijin.xyz/api
+        NEXT_PUBLIC_PLAYWRIGHT_TESTING: 1
+        NEXT_PUBLIC_PLAYWRIGHT_PROJECT_ID: 24
     - uses: actions/upload-artifact@v3
       if: always()
       with:
