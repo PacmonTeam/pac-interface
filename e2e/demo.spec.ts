@@ -30,6 +30,10 @@ test.describe("demo", () => {
     await pacmon.init();
   });
 
+  test.afterAll(async () => {
+    await pacmon.deleteNode();
+  });
+
   test.beforeEach(async ({ page }) => {
     await page.goto("./demo");
     await page.getByText("Connect Wallet").click();
@@ -66,7 +70,7 @@ test.describe("demo", () => {
     });
   });
 
-  test.describe("deposit", () => {
+  test.describe("interactions flow", () => {
     test.beforeEach(async ({ page }) => {
       await pacmon.enableDeposit();
       await pacmon.enableWithdraw();
@@ -109,6 +113,53 @@ test.describe("demo", () => {
       );
       await expect(page.getByTestId("deposited-value-tBTC")).toHaveText(
         "$35,000"
+      );
+    });
+
+    test("deposit tUSDC", async ({ page }) => {
+      await expect(page.getByTestId("deposit-approve-tUSDC")).toBeDisabled();
+      await expect(page.getByTestId("deposit-execute-tUSDC")).toBeDisabled();
+      await page.getByTestId("deposit-input-tUSDC").fill("65000");
+      await expect(
+        page.getByTestId("deposit-approve-tUSDC")
+      ).not.toBeDisabled();
+      await page.getByTestId("deposit-approve-tUSDC").click();
+      await expect(page.getByText("Approve tUSDC success")).toBeVisible();
+      await expect(
+        page.getByTestId("deposit-execute-tUSDC")
+      ).not.toBeDisabled();
+      await page.getByTestId("deposit-execute-tUSDC").click();
+      await expect(
+        page.getByText("Deposit 65,000 tUSDC success")
+      ).toBeVisible();
+
+      await expect(page.getByTestId("oracle-price-tUSDC")).toHaveText("$1");
+      await expect(page.getByTestId("amm-price-tUSDC")).toHaveText("$1");
+      await expect(page.getByTestId("deposited-balance-tUSDC")).toHaveText(
+        "65,000 tUSDC"
+      );
+      await expect(page.getByTestId("deposited-value-tUSDC")).toHaveText(
+        "$65,000"
+      );
+    });
+
+    test("balance", async ({ page }) => {
+      await page.getByTestId("balance-token-button").click();
+      await expect(page.getByText("Balancing")).toBeVisible();
+      await expect(page.getByText("Balance success")).toBeVisible();
+
+      await expect(page.getByTestId("deposited-balance-tBTC")).toHaveText(
+        "1.4271032192 tBTC"
+      );
+      await expect(page.getByTestId("deposited-value-tBTC")).toHaveText(
+        "$49,948.6126713571"
+      );
+
+      await expect(page.getByTestId("deposited-balance-tUSDC")).toHaveText(
+        "50,000 tUSDC"
+      );
+      await expect(page.getByTestId("deposited-value-tUSDC")).toHaveText(
+        "$50,000"
       );
     });
   });

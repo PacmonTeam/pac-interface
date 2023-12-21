@@ -200,38 +200,41 @@ const DemoTokenBox = ({
     <div className="w-full bg-white bg-opacity-[5%] rounded-xl overflow-hidden p-4 text-sm">
       <div className="text-lg font-bold mb-2">{bSymbol}</div>
       <table className="text-left mx-auto">
-        <tr>
-          <td className="pr-4">Oracle Price: </td>
-          <td>
-            <b data-testid={`oracle-price-${baseTokenInfo.symbol}`}>
-              ${formatBigInt(price, PRICE_PRECISION)}
-            </b>
-          </td>
-        </tr>
-        <tr>
-          <td className="pr-4">AMM Price: </td>
-          <td>
-            <b data-testid={`amm-price-${baseTokenInfo.symbol}`}>
-              ${formatBigInt(ammPrice * quotePrice, PRICE_PRECISION * 2)}
-            </b>
-          </td>
-        </tr>
-        <tr>
-          <td className="pr-4">Deposited Balance: </td>
-          <td>
-            <b data-testid={`deposited-balance-${baseTokenInfo.symbol}`}>
-              {formatBigInt(balance, Number(baseTokenInfo.decimals))} {bSymbol}
-            </b>
-          </td>
-        </tr>
-        <tr>
-          <td className="pr-4">Deposited Value: </td>
-          <td>
-            <b data-testid={`deposited-value-${baseTokenInfo.symbol}`}>
-              ${formatBigInt(value, PRICE_PRECISION)}
-            </b>
-          </td>
-        </tr>
+        <tbody>
+          <tr>
+            <td className="pr-4">Oracle Price: </td>
+            <td>
+              <b data-testid={`oracle-price-${baseTokenInfo.symbol}`}>
+                ${formatBigInt(price, PRICE_PRECISION)}
+              </b>
+            </td>
+          </tr>
+          <tr>
+            <td className="pr-4">AMM Price: </td>
+            <td>
+              <b data-testid={`amm-price-${baseTokenInfo.symbol}`}>
+                ${formatBigInt(ammPrice * quotePrice, PRICE_PRECISION * 2)}
+              </b>
+            </td>
+          </tr>
+          <tr>
+            <td className="pr-4">Deposited Balance: </td>
+            <td>
+              <b data-testid={`deposited-balance-${baseTokenInfo.symbol}`}>
+                {formatBigInt(balance, Number(baseTokenInfo.decimals))}{" "}
+                {bSymbol}
+              </b>
+            </td>
+          </tr>
+          <tr>
+            <td className="pr-4">Deposited Value: </td>
+            <td>
+              <b data-testid={`deposited-value-${baseTokenInfo.symbol}`}>
+                ${formatBigInt(value, PRICE_PRECISION)}
+              </b>
+            </td>
+          </tr>
+        </tbody>
       </table>
       <Tabs
         className="w-full mt-4 [&>div]:w-full"
@@ -239,7 +242,12 @@ const DemoTokenBox = ({
         selectedKey={action}
         onSelectionChange={(act: any) => setAction(act)}
       >
-        <Tab key="deposit" title="Deposit" className="w-full">
+        <Tab
+          key="deposit"
+          title="Deposit"
+          className="w-full"
+          data-testid={`deposit-tab-${baseTokenInfo.symbol}`}
+        >
           <Input
             label={`Deposit ${bSymbol}`}
             className="text-right text-xs"
@@ -274,7 +282,12 @@ const DemoTokenBox = ({
             </Button>
           </div>
         </Tab>
-        <Tab key="withdraw" title="Withdraw" className="w-full">
+        <Tab
+          key="withdraw"
+          title="Withdraw"
+          className="w-full"
+          data-testid={`withdraw-tab-${baseTokenInfo.symbol}`}
+        >
           <Input
             label={`Withdraw ${bSymbol}`}
             className="text-right text-xs"
@@ -419,7 +432,12 @@ const DemoInteraction = (props: DemoInteractionProps) => {
             />
           </div>
           <div>
-            <Button size="lg" color="primary" onPress={onPressBalance}>
+            <Button
+              size="lg"
+              color="primary"
+              onPress={onPressBalance}
+              data-testid="balance-token-button"
+            >
               Balance Token Value
             </Button>
           </div>
