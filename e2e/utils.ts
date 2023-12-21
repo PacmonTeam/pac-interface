@@ -12,6 +12,8 @@ import { publicProvider } from "wagmi/providers/public";
 
 const PRIVATE_KEY =
   "0x26e86e45f6fc45ec6e2ecd128cec80fa1d1505e5507dcd2ae58c3130a7a97b48";
+const RPC = process.env.NEXT_PUBLIC_RPC || "http://localhost:8545";
+const EXPLORER = process.env.NEXT_PUBLIC_EXPLORER || "http://localhost:5100";
 
 export const CHAIN: Chain = {
   id: 1337,
@@ -23,12 +25,12 @@ export const CHAIN: Chain = {
     symbol: "PAC",
   },
   rpcUrls: {
-    public: { http: ["http://localhost:8545"] },
-    default: { http: ["http://localhost:8545"] },
+    public: { http: [RPC] },
+    default: { http: [RPC] },
   },
   blockExplorers: {
-    default: { name: "PacmonScan", url: "http://localhost:5100" },
-    etherscan: { name: "PacmonScan", url: "http://localhost:5100" },
+    default: { name: "PacmonScan", url: EXPLORER },
+    etherscan: { name: "PacmonScan", url: EXPLORER },
   },
   contracts: {},
   testnet: true,
@@ -47,7 +49,7 @@ const mockWallet = (): RainbowWallet => ({
         walletClient: createWalletClient({
           account: privateKeyToAccount(PRIVATE_KEY),
           chain: CHAIN,
-          transport: http("http://localhost:8545"),
+          transport: http(RPC),
           pollingInterval: 100,
         }),
         flags: {

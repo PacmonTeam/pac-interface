@@ -8,6 +8,9 @@ test("has title", async ({ page }) => {
   await expect(page).toHaveTitle(/PACMON/);
 });
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3033";
+const PROJECT_ID = Number(process.env.NEXT_PUBLIC_PROJECT_ID || "24");
+
 test("can connect wallet", async ({ page }) => {
   await page.goto("./demo");
 
@@ -26,7 +29,7 @@ test.describe("demo", () => {
   let pacmon: PacmonDemoSDK;
 
   test.beforeAll(async () => {
-    pacmon = new PacmonDemoSDK(24, "http://localhost:3033");
+    pacmon = new PacmonDemoSDK(PROJECT_ID, API_URL);
     await pacmon.init();
   });
 
