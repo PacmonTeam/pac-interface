@@ -27,7 +27,7 @@ test.describe("demo", () => {
 
   test.beforeAll(async () => {
     pacmon = new PacmonDemoSDK(24, "http://localhost:3033");
-    await pacmon.init(94);
+    await pacmon.init();
   });
 
   test.beforeEach(async ({ page }) => {
@@ -55,13 +55,13 @@ test.describe("demo", () => {
 
     test("deposit enabled", async ({ page }) => {
       await expect(page.getByText("Deposit Disabled")).toBeVisible();
-      expect(await pacmon.enableDeposit()).not.toThrow();
+      await pacmon.enableDeposit();
       await expect(page.getByText("Deposit Enabled")).toBeVisible();
     });
 
     test("withdraw enabled", async ({ page }) => {
       await expect(page.getByText("Withdraw Disabled")).toBeVisible();
-      expect(await pacmon.enableWithdraw()).not.toThrow();
+      await pacmon.enableWithdraw();
       await expect(page.getByText("Withdraw Enabled")).toBeVisible();
     });
   });
@@ -89,6 +89,27 @@ test.describe("demo", () => {
         "0 tUSDC"
       );
       await expect(page.getByTestId("deposited-value-tUSDC")).toHaveText("$0");
+    });
+
+    test("deposit tBTC", async ({ page }) => {
+      await expect(page.getByTestId("deposit-approve-tBTC")).toBeDisabled();
+      await expect(page.getByTestId("deposit-execute-tBTC")).toBeDisabled();
+      await page.getByTestId("deposit-input-tBTC").fill("1");
+      await expect(page.getByTestId("deposit-approve-tBTC")).not.toBeDisabled();
+      await page.getByTestId("deposit-approve-tBTC").click();
+      await expect(page.getByText("Approve tBTC success")).toBeVisible();
+      await expect(page.getByTestId("deposit-execute-tBTC")).not.toBeDisabled();
+      await page.getByTestId("deposit-execute-tBTC").click();
+      await expect(page.getByText("Deposit 1 tBTC success")).toBeVisible();
+
+      await expect(page.getByTestId("oracle-price-tBTC")).toHaveText("$35,000");
+      await expect(page.getByTestId("amm-price-tBTC")).toHaveText("$35,000");
+      await expect(page.getByTestId("deposited-balance-tBTC")).toHaveText(
+        "1 tBTC"
+      );
+      await expect(page.getByTestId("deposited-value-tBTC")).toHaveText(
+        "$35,000"
+      );
     });
   });
 });
