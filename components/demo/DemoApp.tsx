@@ -253,12 +253,14 @@ const DemoTokenBox = ({
             placeholder="0"
             type="number"
             size="md"
+            data-testid={`deposit-input-${baseTokenInfo.symbol}`}
           />
           <div className="flex gap-2 w-full mt-4">
             <Button
               className="w-full"
               isDisabled={!shouldApproveFirst}
               onPress={onPressApprove}
+              data-testid={`deposit-approve-${baseTokenInfo.symbol}`}
             >
               Approve
             </Button>
@@ -266,6 +268,7 @@ const DemoTokenBox = ({
               className="w-full"
               isDisabled={!canDeposit}
               onPress={onPressDeposit}
+              data-testid={`deposit-execute-${baseTokenInfo.symbol}`}
             >
               Deposit
             </Button>
@@ -285,12 +288,14 @@ const DemoTokenBox = ({
             placeholder="0"
             type="number"
             size="md"
+            data-testid={`withdraw-input-${baseTokenInfo.symbol}`}
           />
           <div className="flex gap-2 w-full mt-4">
             <Button
               className="w-full"
               isDisabled={!canWithdraw}
               onPress={onPressWithdraw}
+              data-testid={`withdraw-execute-${baseTokenInfo.symbol}`}
             >
               Withdraw
             </Button>
