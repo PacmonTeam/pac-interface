@@ -24,7 +24,7 @@ jobs:
         NEXT_PUBLIC_EXPLORER: https://o.pacmon.suijin.xyz/explorer
         NEXT_PUBLIC_API_URL: https://o.pacmon.suijin.xyz/api
         NEXT_PUBLIC_PLAYWRIGHT_TESTING: 1
-        NEXT_PUBLIC_PLAYWRIGHT_PROJECT_ID: 24
+        NEXT_PUBLIC_PLAYWRIGHT_PROJECT_ID: 1
     - uses: actions/upload-artifact@v3
       if: always()
       with:

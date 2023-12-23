@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { PacmonDemoSDK } from "./pacmonsdk";
+import "dotenv/config";
 
 test("has title", async ({ page }) => {
   await page.goto("./demo");
@@ -9,9 +10,10 @@ test("has title", async ({ page }) => {
 });
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3033";
-const PROJECT_ID = Number(
-  process.env.NEXT_PUBLIC_PLAYWRIGHT_PROJECT_ID || "24"
-);
+const PROJECT_ID = Number(process.env.NEXT_PUBLIC_PLAYWRIGHT_PROJECT_ID || "1");
+
+console.log("PROJECT_ID:", PROJECT_ID);
+console.log("API_URL:", API_URL);
 
 test("can connect wallet", async ({ page }) => {
   await page.goto("./demo");
