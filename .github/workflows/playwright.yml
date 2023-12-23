@@ -18,7 +18,7 @@ jobs:
     - name: Install Playwright Browsers
       run: yarn playwright install --with-deps
     - name: Run Playwright tests
-      run: yarn e2e
+      run: npx playwright test
       env:
         NEXT_PUBLIC_RPC: https://o.pacmon.suijin.xyz/rpc/
         NEXT_PUBLIC_EXPLORER: https://o.pacmon.suijin.xyz/explorer
