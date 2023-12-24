@@ -21,7 +21,7 @@ export default function RootLayout({ Component, pageProps }: AppProps) {
   return (
     <main className={`${inter.className}`}>
       <Head>
-        <title>PACMON : BKKBUIDL2023</title>
+        <title>PACMON</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <NextUIProvider>
