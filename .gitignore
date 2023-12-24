@@ -37,3 +37,8 @@ next-env.d.ts
 # npm lock
 package-lock.json
 _static
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+.env
